@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>错题本 - AI学习伙伴</title>
+    <link rel="stylesheet" href="../css/shouye.css?v=20260322-homefix-1">
+    <link rel="stylesheet" href="../css/notebook.css?v=20260322-homefix-1">
+    <link rel="stylesheet" href="../css/subject-icons.css?v=20260322-homefix-1">
+    <!-- 添加谷歌字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 添加动画库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body>
+    <!-- 背景装饰元素 -->
+    <div class="bg-elements">
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+        <div class="bg-circle bg-circle-3"></div>
+        <div class="bg-dot-grid"></div>
+        <div class="bg-pattern"></div>
+    </div>
+
+    <div class="container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <!-- 复用现有的侧边栏结构 -->
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="circle"></div>
+                </div>
+                <div class="logo-text">
+                    <h3>AI学习伙伴</h3>
+                    <p>个性化学习助手</p>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="../index.html" class="nav-item">
+                    <span class="nav-icon home-icon"></span>
+                    <span>首页</span>
+                </a>
+                <a href="subject.html" class="nav-item">
+                    <span class="nav-icon course-icon"></span>
+                    <span>学科资料</span>
+                </a>
+                <a href="practice.html" class="nav-item">
+                    <span class="nav-icon practice-icon"></span>
+                    <span>练习中心</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon analysis-icon"></span>
+                    <span>学习分析</span>
+                </a>
+                <a href="notebook.html" class="nav-item active">
+                    <span class="nav-icon notebook-icon"></span>
+                    <span>错题本</span>
+                </a>
+                <a href="personal.html" class="nav-item">
+                    <span class="nav-icon user-icon"></span>
+                    <span>个人中心</span>
+                </a>
+            </nav>
+
+            <!-- AI助手头像和对话框 -->
+            <div class="avatar-container" id="ai-avatar-container">
+                <!-- 保持现有的AI助手结构 -->
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <div class="notebook-container">
+                <!-- 错题本标题区 -->
+                <div class="notebook-header">
+                    <h1>错题本</h1>
+                    <p class="notebook-description">记录、分析、改正，让每个错题成为进步的阶梯</p>
+                </div>
+
+                <!-- 搜索和过滤区 -->
+                <div class="notebook-controls">
+                    <div class="search-box">
+                        <input type="text" id="search-input" placeholder="搜索知识点、题目内容...">
+                        <button id="search-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2"/>
+                                <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="filter-controls">
+                        <select id="subject-filter">
+                            <option value="all">全部学科</option>
+                            <option value="math">数学</option>
+                            <option value="physics">物理</option>
+                            <option value="chemistry">化学</option>
+                        </select>
+                        <select id="knowledge-filter">
+                            <option value="all">全部知识点</option>
+                        </select>
+                        <select id="difficulty-filter">
+                            <option value="all">全部难度</option>
+                            <option value="easy">简单</option>
+                            <option value="medium">中等</option>
+                            <option value="hard">困难</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 错题统计卡片 -->
+                <div class="stats-cards">
+                    <div class="stats-card">
+                        <div class="stats-icon total-icon"></div>
+                        <div class="stats-info">
+                            <h4>总错题数</h4>
+                            <div class="stats-number" id="total-mistakes">0</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon mastered-icon"></div>
+                        <div class="stats-info">
+                            <h4>已掌握</h4>
+                            <div class="stats-number" id="mastered-count">0</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon review-icon"></div>
+                        <div class="stats-info">
+                            <h4>待复习</h4>
+                            <div class="stats-number" id="review-count">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 错题列表区域 -->
+                <div class="notebook-content">
+                    <!-- 知识点分类标签 -->
+                    <div class="knowledge-tags" id="knowledge-tags">
+                        <!-- 知识点标签将通过JavaScript动态生成 -->
+                    </div>
+
+                    <!-- 错题列表 -->
+                    <div class="mistake-list" id="mistake-list">
+                        <!-- 错题项将通过JavaScript动态生成 -->
+                    </div>
+
+                    <!-- 分页控制 -->
+                    <div class="pagination">
+                        <button id="prev-page" disabled>上一页</button>
+                        <span class="page-info">第 <span id="current-page">1</span> / <span id="total-pages">1</span> 页</span>
+                        <button id="next-page">下一页</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/shouye.js?v=20260322-homefix-1"></script>
+    <script src="../js/ai-service.js?v=20260322-homefix-1"></script>
+    <script src="../js/notebook.js?v=20260322-homefix-1"></script>
+</body>
+</html> 

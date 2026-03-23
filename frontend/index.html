@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI学习伙伴 - 个性化学习助手</title>
+    <link rel="stylesheet" href="css/shouye.css?v=20260322-homefix-1">
+    <!-- 添加谷歌字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 背景装饰元素 -->
+    <div class="bg-elements">
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+        <div class="bg-circle bg-circle-3"></div>
+        <div class="bg-dot-grid"></div>
+    </div>
+
+    <div class="container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="circle"></div>
+                </div>
+                <div class="logo-text">
+                    <h3>AI学习伙伴</h3>
+                    <p>个性化学习助手</p>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item active">
+                    <span class="nav-icon home-icon"></span>
+                    <span>首页</span>
+                </a>
+                <a href="./pages/subject.html" class="nav-item">
+                    <span class="nav-icon course-icon"></span>
+                    <span>学科资料</span>
+                </a>
+                <a href="pages/practice.html" class="nav-item">
+                    <span class="nav-icon practice-icon"></span>
+                    <span>练习中心</span>
+                </a>
+                <a href="pages/analysis.html" class="nav-item">
+                    <span class="nav-icon analysis-icon"></span>
+                    <span>学习分析</span>
+                </a>
+                <a href="pages/notebook.html" class="nav-item">
+                    <span class="nav-icon notebook-icon"></span>
+                    <span>错题本</span>
+                </a>
+                <a href="./pages/personal.html" class="nav-item">
+                    <span class="nav-icon user-icon"></span>
+                    <span>个人中心</span>
+                </a>
+            </nav>
+
+            <div class="avatar-container" id="ai-avatar-container">
+                <div class="avatar">
+                    <!-- 头像 -->
+                     <img src="images/生成卡通形象.png" alt="AI助手头像">
+                </div>
+                <div class="chat-bubble">
+                    <p>你好！我是你的AI助手</p>
+                    <p>点击开始学习，我将陪你一起</p>
+                </div>
+            </div>
+            
+            <!-- AI助手对话界面 -->
+            <div class="ai-sidebar-chat" id="ai-sidebar-chat">
+                <div class="ai-chat-header">
+                    <h3>AI学习助手</h3>
+                </div>
+                <div class="ai-chat-messages" id="ai-sidebar-messages">
+                    <!-- 消息将在这里动态加载 -->
+                </div>
+                <div class="ai-chat-input">
+                    <input type="text" id="ai-sidebar-input" placeholder="有什么想问我的...">
+                    <button id="ai-sidebar-send">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <div class="welcome-section">
+                <h1>欢迎使用AI学习伙伴！</h1>
+                <p class="welcome-subtitle">你的智能学习旅程从这里开始</p>
+            </div>
+
+            <!-- 学习模式卡片 -->
+            <div class="learning-cards">
+                <div class="card card-purple">
+                    <div class="card-icon robot-icon"></div>
+                    <h3>智能出题</h3>
+                    <p>基于你的学习认知智能分析，量身定制专属题型，每一题都直击你的知识盲点，让学习效率提升300%</p>
+                    <button class="card-btn">开始体验</button>
+                </div>
+
+                <div class="card card-blue">
+                    <div class="card-icon hat-icon"></div>
+                    <h3>陪伴式学习</h3>
+                    <p>24小时随时在线的AI导师，你解答一切疑问你的学习问题，解答疑惑，让独自学习不再孤单</p>
+                    <button class="card-btn">开始体验</button>
+                </div>
+
+                <div class="card card-orange">
+                    <div class="card-icon game-icon"></div>
+                    <h3>游戏化学习</h3>
+                    <p>寓教于乐的知识点直观互动的游戏体验，通过闯关，奖励和积分机制，激发学习动力，让你爱上学习的每一刻</p>
+                    <button class="card-btn">开始体验</button>
+                </div>
+
+                <div class="card card-green">
+                    <div class="card-icon bulb-icon"></div>
+                    <h3>多角度思考</h3>
+                    <p>打破传统"唯一标准答案"的束缚，鼓励多种思维角度和创新方法，培养你的发散思维能力，成就未来创新人才</p>
+                    <button class="card-btn">开始体验</button>
+                </div>
+            </div>
+
+            <!-- 学科选择区域 -->
+            <div class="subject-section">
+                <h2>今天想学习什么？</h2>
+                
+                <div class="subject-grid">
+                    <button class="subject-btn chinese">
+                        <span class="subject-icon"></span>
+                        <span>语文</span>
+                    </button>
+                    
+                    <button class="subject-btn math">
+                        <span class="subject-icon"></span>
+                        <span>数学</span>
+                    </button>
+                    
+                    <button class="subject-btn english">
+                        <span class="subject-icon"></span>
+                        <span>英语</span>
+                    </button>
+                    
+                    <button class="subject-btn physics">
+                        <span class="subject-icon"></span>
+                        <span>物理</span>
+                    </button>
+                    
+                    <button class="subject-btn chemistry">
+                        <span class="subject-icon"></span>
+                        <span>化学</span>
+                    </button>
+                    
+                    <button class="subject-btn biology">
+                        <span class="subject-icon"></span>
+                        <span>生物</span>
+                    </button>
+                    
+                    <button class="subject-btn geography">
+                        <span class="subject-icon"></span>
+                        <span>地理</span>
+                    </button>
+                    
+                    <button class="subject-btn politics">
+                        <span class="subject-icon"></span>
+                        <span>政治</span>
+                    </button>
+                    
+                    <button class="subject-btn history">
+                        <span class="subject-icon"></span>
+                        <span>历史</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 学习统计卡片 -->
+            <div class="stats-section">
+                <h2>你的学习进度</h2>
+                <div class="stats-cards">
+                    <div class="stats-card">
+                        <div class="stats-icon completed-icon"></div>
+                        <div class="stats-info">
+                            <h4>已完成课程</h4>
+                            <p class="stats-number">24</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon streak-icon"></div>
+                        <div class="stats-info">
+                            <h4>连续学习天数</h4>
+                            <p class="stats-number">7</p>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon time-icon"></div>
+                        <div class="stats-info">
+                            <h4>本周学习时长</h4>
+                            <p class="stats-number">12<span class="stats-unit">小时</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/shouye.js?v=20260322-homefix-1"></script>
+    <script src="js/ai-service.js?v=20260322-homefix-1"></script>
+    <!-- AI助手修复脚本 -->
+    <script src="js/ai-service-fix.js?v=20260322-homefix-1"></script>
+</body>
+</html> 

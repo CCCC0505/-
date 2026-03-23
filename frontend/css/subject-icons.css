@@ -1,0 +1,60 @@
+/* 学科图标样式 */
+.subject-icon-large {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+/* 数学图标 */
+.math-icon {
+    background: linear-gradient(135deg, #4a6bff, #2541b2);
+}
+
+.math-icon svg {
+    stroke: #fff;
+    fill: none;
+}
+
+/* 语文图标 */
+.chinese-icon {
+    background: linear-gradient(135deg, #ff7043, #c63f17);
+}
+
+.chinese-icon svg {
+    stroke: #fff;
+    fill: none;
+}
+
+/* 英语图标 */
+.english-icon {
+    background: linear-gradient(135deg, #26c6da, #00838f);
+}
+
+.english-icon svg {
+    stroke: #fff;
+    fill: none;
+}
+
+/* 数学图标SVG */
+.math-icon svg path {
+    d: path("M4 19h16v2H4zm3-4h10v2H7zm-3-4h16v2H4zm3-4h10v2H7zM4 3h16v2H4z");
+}
+
+/* 语文图标SVG */
+.chinese-icon svg path {
+    d: path("M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z");
+}
+
+/* 英语图标SVG */
+.english-icon svg path {
+    d: path("M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z");
+}
+
+/* 物理图标SVG */
+.physics-icon svg path {
+    d: path("M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z");
+} 

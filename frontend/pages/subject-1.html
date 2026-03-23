@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学科知识点 - AI学习伙伴</title>
+    <link rel="stylesheet" href="../css/shouye.css?v=20260322-homefix-1">
+    <link rel="stylesheet" href="../css/subject-1.css?v=20260322-homefix-1">
+    <link rel="stylesheet" href="../css/subject-icons.css?v=20260322-homefix-1">
+    <!-- 添加谷歌字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 添加动画库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body>
+    <!-- 背景装饰元素 -->
+    <div class="bg-elements">
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+        <div class="bg-circle bg-circle-3"></div>
+        <div class="bg-dot-grid"></div>
+        <div class="bg-pattern"></div>
+    </div>
+
+    <div class="container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="circle"></div>
+                </div>
+                <div class="logo-text">
+                    <h3>AI学习伙伴</h3>
+                    <p>个性化学习助手</p>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="../index.html" class="nav-item">
+                    <span class="nav-icon home-icon"></span>
+                    <span>首页</span>
+                </a>
+                <a href="subject.html" class="nav-item active">
+                    <span class="nav-icon course-icon"></span>
+                    <span>学科资料</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon practice-icon"></span>
+                    <span>练习中心</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon analysis-icon"></span>
+                    <span>学习分析</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon notebook-icon"></span>
+                    <span>错题本</span>
+                </a>
+                <a href="personal.html" class="nav-item">
+                    <span class="nav-icon user-icon"></span>
+                    <span>个人中心</span>
+                </a>
+            </nav>
+
+            <div class="avatar-container" id="ai-avatar-container">
+                <div class="avatar">
+                    <!-- 头像 -->
+                    <img src="../images/生成卡通形象.png" alt="AI助手头像">
+                </div>
+                <div class="chat-bubble">
+                    <p>你好！我是你的AI助手</p>
+                    <p>点击开始学习，我将陪你一起</p>
+                </div>
+            </div>
+            
+            <!-- AI助手对话界面 -->
+            <div class="ai-sidebar-chat" id="ai-sidebar-chat">
+                <div class="ai-chat-header">
+                    <h3>AI学习助手</h3>
+                </div>
+                <div class="ai-chat-messages" id="ai-sidebar-messages">
+                    <!-- 消息将在这里动态加载 -->
+                </div>
+                <div class="ai-chat-input">
+                    <input type="text" id="ai-sidebar-input" placeholder="有什么想问我的...">
+                    <button id="ai-sidebar-send">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <div class="subject-detail-container">
+                <!-- 顶部导航路径 -->
+                <div class="breadcrumb">
+                    <a href="subject.html">学科资料</a>
+                    <span class="separator">></span>
+                    <span id="current-subject">物理</span>
+                    <span class="separator">></span>
+                    <span id="current-grade">初中二年级</span>
+                </div>
+
+                <!-- 学科标题 -->
+                <div class="subject-detail-header">
+                    <div class="subject-icon-large physics-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 2C9.49872 4.73835 8.07725 8.29203 8 12C8.07725 15.708 9.49872 19.2616 12 22" stroke="currentColor" stroke-width="2"/>
+                            <path d="M2 12H22" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="subject-title">
+                        <h1 id="subject-name">物理</h1>
+                        <p class="subject-description">探索物理世界的奥秘，从基础概念到实际应用</p>
+                    </div>
+                    <div class="subject-actions">
+                        <button class="action-btn favorite">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>收藏</span>
+                        </button>
+                        <button class="action-btn share">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="2"/>
+                                <line x1="9" y1="10.5" x2="15" y2="6.5" stroke="currentColor" stroke-width="2"/>
+                                <line x1="9" y1="13.5" x2="15" y2="17.5" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                            <span>分享</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 主要内容区域 -->
+                <div class="subject-content">
+                    <!-- 左侧知识点导航 -->
+                    <div class="knowledge-nav">
+                        <div class="knowledge-header">
+                            <h3>知识点列表</h3>
+                            <div class="knowledge-search">
+                                <input type="text" placeholder="搜索知识点..." id="knowledge-search-input">
+                                <button id="knowledge-search-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="loading-state" id="knowledge-loading">
+                            <div class="spinner"></div>
+                            <p>加载知识点...</p>
+                        </div>
+                        <div class="knowledge-list" id="knowledge-list">
+                            <!-- 知识点将从数据库动态加载 -->
+                        </div>
+                    </div>
+
+                    <!-- 右侧知识点详情 -->
+                    <div class="knowledge-detail">
+                        <div class="knowledge-detail-header">
+                            <h2 id="current-knowledge">加载中...</h2>
+                            <div class="knowledge-meta">
+                                <span class="difficulty">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 2L14.6 9.26L22 9.27L16.24 13.8L18.18 21.02L12 16.8L5.82 21.02L7.76 13.8L2 9.27L9.4 9.26L12 2Z" fill="currentColor"/>
+                                    </svg>
+                                    <span id="knowledge-difficulty">中等</span>
+                                </span>
+                                <span class="importance">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M12 15L8 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M12 15L16 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M3 21H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span id="knowledge-importance">重点</span>
+                                </span>
+                                <span class="exam-frequency">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M16 2V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M8 2V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M3 11H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span id="knowledge-frequency">高频考点</span>
+                                </span>
+                                <!-- 添加开始练习按钮 -->
+                                <a href="#" id="start-practice-btn" class="start-practice-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5 3L19 12L5 21V3Z" fill="currentColor"/>
+                                    </svg>
+                                    开始练习
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="loading-state" id="detail-loading">
+                            <div class="spinner"></div>
+                            <p>加载知识点详情...</p>
+                        </div>
+                        
+                        <div class="knowledge-content" id="knowledge-content">
+                            <!-- 知识点内容将从数据库动态加载 -->
+                        </div>
+
+                        <!-- 标签切换 -->
+                        <div class="content-tabs">
+                            <button class="tab-button active" data-tab="theory">基础理论</button>
+                            <button class="tab-button" data-tab="examples">例题讲解</button>
+                            <button class="tab-button" data-tab="exercises">习题练习</button>
+                            <button class="tab-button" data-tab="videos">视频资源</button>
+                        </div>
+
+                        <!-- 标签内容区 -->
+                        <div class="tab-content-container">
+                            <!-- 基础理论 -->
+                            <div class="tab-content active" id="theory-content">
+                                <div class="theory-section">
+                                    <h3>概念解析</h3>
+                                    <div class="theory-block" id="concept-explanation">
+                                        <!-- 动态加载 -->
+                                    </div>
+                                </div>
+                                
+                                <div class="theory-section">
+                                    <h3>公式推导</h3>
+                                    <div class="theory-block" id="formula-derivation">
+                                        <!-- 动态加载 -->
+                                    </div>
+                                </div>
+                                
+                                <div class="theory-section">
+                                    <h3>应用场景</h3>
+                                    <div class="theory-block" id="application-scenarios">
+                                        <!-- 动态加载 -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 例题讲解 -->
+                            <div class="tab-content" id="examples-content">
+                                <div class="examples-container" id="examples-list">
+                                    <!-- 动态加载 -->
+                                </div>
+                            </div>
+
+                            <!-- 习题练习 -->
+                            <div class="tab-content" id="exercises-content">
+                                <div class="exercise-header">
+                                    <h3>习题练习</h3>
+                                    <div class="exercise-filters">
+                                        <select id="difficulty-filter">
+                                            <option value="all">全部难度</option>
+                                            <option value="easy">基础</option>
+                                            <option value="medium">中等</option>
+                                            <option value="hard">困难</option>
+                                        </select>
+                                        <select id="type-filter">
+                                            <option value="all">全部题型</option>
+                                            <option value="choice">选择题</option>
+                                            <option value="fill">填空题</option>
+                                            <option value="calculation">计算题</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="exercises-container" id="exercises-list">
+                                    <!-- 动态加载 -->
+                                </div>
+                                <div class="exercise-pagination">
+                                    <button id="prev-page" disabled>上一页</button>
+                                    <span id="page-info">第 <span id="current-page">1</span> 页，共 <span id="total-pages">1</span> 页</span>
+                                    <button id="next-page">下一页</button>
+                                </div>
+                            </div>
+
+                            <!-- 视频资源 -->
+                            <div class="tab-content" id="videos-content">
+                                <div class="videos-container" id="videos-list">
+                                    <!-- 动态加载 -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI助手推荐 -->
+                        <div class="ai-recommendations">
+                            <div class="ai-rec-header">
+                                <div class="ai-icon">
+                                    <img src="../images/生成卡通形象.png" alt="AI助手头像">
+                                </div>
+                                <h3>AI学习推荐</h3>
+                            </div>
+                            <div class="ai-rec-content">
+                                <p class="ai-message" id="ai-recommendation">根据你的学习数据，我推荐你重点关注"<span class="highlight">牛顿第二定律的应用</span>"部分，这是你之前的薄弱环节。</p>
+                                <div class="ai-rec-cards" id="ai-rec-cards">
+                                    <!-- 动态加载推荐卡片 -->
+                                </div>
+                            </div>
+                            <div class="ai-rec-footer">
+                                <button id="ai-explain-btn" class="ai-rec-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M12 16V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                        <circle cx="12" cy="8" r="1" fill="currentColor"/>
+                                    </svg>
+                                    <span>解释推荐原因</span>
+                                </button>
+                                <button id="refresh-rec-btn" class="ai-rec-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M23 4V10H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M1 20V14H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M3.51 9.00002C4.01717 7.56671 4.87913 6.2854 6.01547 5.27543C7.1518 4.26546 8.52547 3.55978 10.0083 3.22427C11.4911 2.88877 13.0348 2.93436 14.4952 3.35679C15.9556 3.77922 17.2853 4.56473 18.36 5.64002L23 10M1 14L5.64 18.36C6.71475 19.4353 8.04437 20.2208 9.50481 20.6432C10.9652 21.0657 12.5089 21.1113 13.9917 20.7758C15.4745 20.4402 16.8482 19.7346 17.9845 18.7246C19.1209 17.7146 19.9828 16.4333 20.49 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>刷新推荐</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/shouye.js?v=20260322-homefix-1"></script>
+    <script src="../js/ai-service.js?v=20260322-homefix-1"></script>
+    <script src="../js/subject-1.js?v=20260322-homefix-1"></script>
+    <!-- AI助手修复脚本 -->
+    <script src="../js/ai-service-fix.js?v=20260322-homefix-1"></script>
+    <script>
+        // 处理图片加载失败
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置默认视频封面
+            const placeholderUrl = '../images/video-placeholder.jpg';
+            document.querySelectorAll('.video-thumbnail img').forEach(img => {
+                img.addEventListener('error', function() {
+                    this.src = placeholderUrl;
+                });
+                // 如果已经加载但是无效，也设置为默认图片
+                if (!img.complete || img.naturalHeight === 0) {
+                    img.src = placeholderUrl;
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const subject = urlParams.get('subject');
+            const grade = urlParams.get('grade');
+            const level = urlParams.get('level');
+
+            // 设置页面标题和面包屑导航
+            document.getElementById('subject-name').textContent = subject;
+            document.getElementById('current-subject').textContent = subject;
+            document.getElementById('current-grade').textContent = `${level}${grade}`;
+
+            // 示例知识点数据
+            const knowledgePoints = {
+                '语文': ['汉字的起源', '诗词赏析', '作文技巧'],
+                '数学': ['加减法运算', '几何图形', '应用题解法'],
+                '英语': ['基础词汇', '语法规则', '日常对话'],
+                '物理': ['牛顿定律', '电路基础', '光学现象'],
+                '化学': ['元素周期表', '化学反应', '实验安全'],
+                '生物': ['细胞结构', '生态系统', '人体器官'],
+                '历史': ['古代文明', '历史事件', '重要人物'],
+                '地理': ['地图识别', '气候类型', '地形地貌'],
+                '政治': ['公民权利', '法律基础', '社会责任'],
+                '科学': ['自然现象', '实验方法', '科学探究'],
+                '高等数学': ['微积分基础', '线性代数', '概率统计'],
+                '大学物理': ['力学原理', '电磁学', '热力学'],
+                '大学英语': ['学术写作', '专业词汇', '英语演讲'],
+                '计算机基础': ['编程入门', '数据结构', '计算机网络'],
+                '经济学原理': ['供需理论', '市场结构', '经济政策'],
+                '管理学': ['组织结构', '决策理论', '领导力']
+            };
+
+            // 动态加载知识点列表
+            const knowledgeList = document.getElementById('knowledge-list');
+            knowledgeList.innerHTML = '';
+            if (knowledgePoints[subject]) {
+                knowledgePoints[subject].forEach(point => {
+                    const item = document.createElement('div');
+                    item.className = 'knowledge-item';
+                    item.textContent = point;
+                    knowledgeList.appendChild(item);
+                });
+            } else {
+                knowledgeList.innerHTML = '<p>暂无知识点数据</p>';
+            }
+
+            // 设置默认显示的知识点详情
+            const currentKnowledge = document.getElementById('current-knowledge');
+            currentKnowledge.textContent = knowledgePoints[subject] ? knowledgePoints[subject][0] : '暂无知识点';
+
+            // 隐藏加载状态
+            document.getElementById('knowledge-loading').style.display = 'none';
+            document.getElementById('detail-loading').style.display = 'none';
+        });
+    </script>
+</body>
+</html> 

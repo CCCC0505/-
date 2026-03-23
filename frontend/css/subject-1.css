@@ -1,0 +1,1022 @@
+/* 知识点页面样式 - subject-1.css */
+:root {
+    --primary-color: #7C4DFF;
+    --primary-rgb: 124, 77, 255;
+    --primary-light: #B388FF;
+    --primary-dark: #5E35B1;
+    --secondary-color: #3D5AFE;
+    --secondary-rgb: 61, 90, 254;
+    --success-color: #4CAF50;
+    --success-rgb: 76, 175, 80;
+    --warning-color: #FFC107;
+    --warning-rgb: 255, 193, 7;
+    --danger-color: #F44336;
+    --danger-rgb: 244, 67, 54;
+    --info-color: #2196F3;
+    --info-rgb: 33, 150, 243;
+    --text-color: #333333;
+    --text-light: #666666;
+    --text-lighter: #999999;
+    --bg-color: #F8F9FA;
+    --card-bg: #FFFFFF;
+    --border-color: #E5E9F0;
+    --border-radius: 12px;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+/* 主容器样式 */
+.subject-detail-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 1400px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* 导航路径 */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: var(--text-lighter);
+}
+
+.breadcrumb a {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.breadcrumb a:hover {
+    color: var(--primary-color);
+}
+
+.separator {
+    margin: 0 8px;
+}
+
+/* 学科标题区域 */
+.subject-detail-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.03) 0%, rgba(var(--secondary-rgb), 0.03) 100%);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--shadow-sm);
+}
+
+.subject-icon-large {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(var(--primary-rgb), 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.physics-icon svg {
+    stroke: var(--primary-color);
+}
+
+.subject-title {
+    flex: 1;
+}
+
+.subject-title h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: var(--text-color);
+}
+
+.subject-description {
+    color: var(--text-light);
+    margin: 0;
+    font-size: 16px;
+}
+
+.subject-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    border: none;
+    border-radius: var(--border-radius);
+    background: rgba(var(--primary-rgb), 0.08);
+    color: var(--primary-color);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.action-btn svg {
+    margin-right: 8px;
+    stroke: var(--primary-color);
+}
+
+.action-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.action-btn:hover svg {
+    stroke: white;
+}
+
+.subject-content {
+    display: flex;
+    gap: 30px;
+}
+
+/* 左侧知识点导航 */
+.knowledge-nav {
+    flex: 0 0 280px;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    max-height: calc(100vh - 200px);
+    position: sticky;
+    top: 30px;
+}
+
+.knowledge-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.03) 0%, rgba(var(--secondary-rgb), 0.03) 100%);
+}
+
+.knowledge-header h3 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.knowledge-search {
+    display: flex;
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+    overflow: hidden;
+    background: white;
+}
+
+.knowledge-search input {
+    flex: 1;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    outline: none;
+}
+
+.knowledge-search button {
+    border: none;
+    background: rgba(var(--primary-rgb), 0.08);
+    width: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.knowledge-search button:hover {
+    background: rgba(var(--primary-rgb), 0.15);
+}
+
+.knowledge-search button svg {
+    stroke: var(--primary-color);
+}
+
+.knowledge-list {
+    padding: 15px 0;
+    overflow-y: auto;
+    max-height: calc(100vh - 300px);
+}
+
+.knowledge-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-light);
+    position: relative;
+}
+
+.knowledge-item:hover {
+    background: rgba(var(--primary-rgb), 0.05);
+    color: var(--primary-color);
+}
+
+.knowledge-item.active {
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.knowledge-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--primary-color);
+}
+
+.knowledge-item-icon {
+    margin-right: 12px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 右侧知识点详情 */
+.knowledge-detail {
+    flex: 1;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    padding: 30px;
+    min-height: 600px;
+}
+
+.knowledge-detail-header {
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+.knowledge-detail-header h2 {
+    margin: 0 0 15px 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.knowledge-meta {
+    display: flex;
+    gap: 20px;
+}
+
+.difficulty,
+.importance,
+.exam-frequency {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.difficulty svg,
+.importance svg,
+.exam-frequency svg {
+    margin-right: 6px;
+}
+
+.difficulty svg {
+    color: var(--warning-color);
+}
+
+.importance svg {
+    color: var(--danger-color);
+}
+
+.exam-frequency svg {
+    color: var(--info-color);
+}
+
+.knowledge-content {
+    margin-bottom: 30px;
+    line-height: 1.6;
+    color: var(--text-light);
+}
+
+/* 标签切换 */
+.content-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 25px;
+}
+
+.tab-button {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.tab-button:hover {
+    color: var(--primary-color);
+}
+
+.tab-button.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content-container {
+    min-height: 300px;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 基础理论 */
+.theory-section {
+    margin-bottom: 25px;
+}
+
+.theory-section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 15px 0;
+    display: flex;
+    align-items: center;
+}
+
+.theory-section h3::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: var(--primary-color);
+    display: inline-block;
+    margin-right: 10px;
+    border-radius: 2px;
+}
+
+.theory-block {
+    padding: 20px;
+    background: rgba(var(--primary-rgb), 0.02);
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+    line-height: 1.7;
+}
+
+/* 例题讲解 */
+.examples-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.example-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.example-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.example-header {
+    padding: 15px 20px;
+    background: rgba(var(--primary-rgb), 0.05);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.example-title {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.example-difficulty {
+    padding: 5px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.difficulty-easy {
+    background: rgba(var(--success-rgb), 0.1);
+    color: var(--success-color);
+}
+
+.difficulty-medium {
+    background: rgba(var(--warning-rgb), 0.1);
+    color: var(--warning-color);
+}
+
+.difficulty-hard {
+    background: rgba(var(--danger-rgb), 0.1);
+    color: var(--danger-color);
+}
+
+.example-content {
+    padding: 20px;
+}
+
+.example-question {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.solution-toggle {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-weight: 500;
+    cursor: pointer;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+.solution-toggle:hover {
+    background: rgba(var(--primary-rgb), 0.05);
+    border-radius: var(--border-radius);
+}
+
+.example-solution {
+    background: rgba(var(--primary-rgb), 0.02);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-top: 15px;
+    display: none;
+}
+
+.example-solution.visible {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+/* 习题练习 */
+.exercise-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.exercise-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.exercise-filters {
+    display: flex;
+    gap: 10px;
+}
+
+.exercise-filters select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: white;
+    color: var(--text-light);
+    font-size: 14px;
+    outline: none;
+    transition: var(--transition);
+}
+
+.exercise-filters select:focus {
+    border-color: var(--primary-color);
+}
+
+.exercises-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.exercise-item {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    transition: var(--transition);
+}
+
+.exercise-item:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.exercise-question {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.exercise-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.exercise-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.exercise-option:hover {
+    background: rgba(var(--primary-rgb), 0.05);
+}
+
+.exercise-option.selected {
+    background: rgba(var(--primary-rgb), 0.1);
+    font-weight: 500;
+}
+
+.exercise-option input {
+    margin: 0;
+}
+
+.exercise-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.exercise-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.submit-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.submit-btn:hover {
+    background: var(--primary-dark);
+}
+
+.hint-btn {
+    background: rgba(var(--warning-rgb), 0.1);
+    color: var(--warning-color);
+}
+
+.hint-btn:hover {
+    background: rgba(var(--warning-rgb), 0.2);
+}
+
+.exercise-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.exercise-pagination button {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: white;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.exercise-pagination button:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.exercise-pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#page-info {
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+/* 视频资源 */
+.videos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.video-card {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.video-thumbnail {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+    background: var(--primary-light);
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.video-card:hover .video-thumbnail img {
+    transform: scale(1.05);
+}
+
+.play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.play-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+}
+
+.video-card:hover .play-btn {
+    background: rgba(var(--primary-rgb), 0.8);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.video-info {
+    padding: 15px;
+}
+
+.video-title {
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: var(--text-color);
+}
+
+.video-meta {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-lighter);
+    font-size: 13px;
+}
+
+/* AI推荐 */
+.ai-recommendations {
+    margin-top: 40px;
+    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05) 0%, rgba(var(--secondary-rgb), 0.05) 100%);
+    padding: 25px;
+    box-shadow: var(--shadow-sm);
+}
+
+.ai-rec-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ai-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+}
+
+.ai-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ai-rec-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.ai-message {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.highlight {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.ai-rec-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.ai-rec-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border-left: 3px solid var(--primary-color);
+}
+
+.ai-rec-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.rec-card-title {
+    font-weight: 600;
+    margin: 0 0 10px 0;
+    color: var(--text-color);
+}
+
+.rec-card-desc {
+    color: var(--text-light);
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.ai-rec-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.ai-rec-btn {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.ai-rec-btn svg {
+    margin-right: 8px;
+}
+
+.ai-rec-btn:hover {
+    background: white;
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* 加载状态 */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    color: var(--text-light);
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(var(--primary-rgb), 0.1);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 1200px) {
+    .subject-content {
+        flex-direction: column;
+    }
+    
+    .knowledge-nav {
+        flex: 0 0 auto;
+        max-height: none;
+        position: static;
+        top: auto;
+        margin-bottom: 30px;
+    }
+    
+    .knowledge-list {
+        max-height: 300px;
+    }
+    
+    .ai-rec-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .subject-detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .subject-icon-large {
+        margin-bottom: 15px;
+    }
+    
+    .subject-actions {
+        margin-top: 20px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .content-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 5px;
+    }
+    
+    .tab-button {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+    
+    .videos-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .ai-rec-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .knowledge-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .exercise-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .exercise-filters {
+        width: 100%;
+    }
+    
+    .exercise-filters select {
+        flex: 1;
+    }
+}
+
+/* 黑暗模式调整 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-color: #E5E9F0;
+        --text-light: #D8DEE9;
+        --text-lighter: #9DA4BB;
+        --bg-color: #2E3440;
+        --card-bg: #3B4252;
+        --border-color: #4C566A;
+    }
+    
+    body, .container, .sidebar {
+        background-color: var(--bg-color);
+    }
+    
+    .knowledge-nav, .knowledge-detail, .exercise-item, .video-card, .ai-rec-card {
+        background-color: var(--card-bg);
+    }
+    
+    .theory-block {
+        background: rgba(var(--primary-rgb), 0.1);
+    }
+    
+    .knowledge-search {
+        background: var(--card-bg);
+    }
+    
+    .knowledge-search input {
+        background: var(--card-bg);
+        color: var(--text-light);
+    }
+    
+    .exercise-filters select {
+        background: var(--card-bg);
+        color: var(--text-light);
+    }
+    
+    .exercise-pagination button {
+        background: var(--card-bg);
+    }
+    
+    .ai-message {
+        background: rgba(var(--primary-rgb), 0.1);
+    }
+    
+    .ai-rec-btn {
+        background: rgba(var(--primary-rgb), 0.1);
+    }
+    
+    .ai-rec-btn:hover {
+        background: rgba(var(--primary-rgb), 0.2);
+    }
+}
+
+/* 开始练习按钮样式 */
+.start-practice-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 15px;
+    background: linear-gradient(45deg, #7C4DFF, #448AFF);
+    color: white;
+    border-radius: 20px;
+    margin-left: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 10px rgba(124, 77, 255, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.start-practice-btn svg {
+    margin-right: 6px;
+}
+
+.start-practice-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(124, 77, 255, 0.4);
+}
+
+.start-practice-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(124, 77, 255, 0.2);
+} 

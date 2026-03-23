@@ -1,0 +1,395 @@
+/* 错题本页面样式 */
+:root {
+    --primary-color: #7C4DFF;
+    --secondary-color: #3D5AFE;
+    --success-color: #4CAF50;
+    --warning-color: #FFC107;
+    --danger-color: #f44336;
+    --info-color: #2196F3;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --bg-light: #F5F7FA;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+/* 容器样式 */
+.notebook-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 标题区域 */
+.notebook-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.notebook-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.notebook-description {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* 搜索和过滤控件 */
+.notebook-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    padding-right: 3rem;
+    border: 2px solid #e0e0e0;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.search-box input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.1);
+}
+
+.search-box button {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.search-box button:hover {
+    color: var(--primary-color);
+}
+
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-controls select {
+    padding: 0.8rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background-color: white;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-controls select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.1);
+}
+
+/* 统计卡片 */
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stats-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: var(--transition);
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stats-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(124, 77, 255, 0.1);
+}
+
+.stats-info h4 {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.stats-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* 知识点标签 */
+.knowledge-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.knowledge-tag {
+    padding: 0.5rem 1rem;
+    background: rgba(124, 77, 255, 0.1);
+    color: var(--primary-color);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.knowledge-tag:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.knowledge-tag.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* 错题列表 */
+.mistake-list {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.mistake-item {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+}
+
+.mistake-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.mistake-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.mistake-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.mistake-subject {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.mistake-difficulty {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+}
+
+.difficulty-easy {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+}
+
+.difficulty-medium {
+    background: rgba(255, 193, 7, 0.1);
+    color: var(--warning-color);
+}
+
+.difficulty-hard {
+    background: rgba(244, 67, 54, 0.1);
+    color: var(--danger-color);
+}
+
+.mistake-content {
+    margin-bottom: 1rem;
+}
+
+.mistake-question {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.mistake-answer {
+    color: var(--text-secondary);
+}
+
+.mistake-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.mistake-tags {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.mistake-tag {
+    padding: 0.25rem 0.75rem;
+    background: var(--bg-light);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.mistake-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+}
+
+.review-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.review-btn:hover {
+    background: #6c3ce0;
+}
+
+.delete-btn {
+    background: rgba(244, 67, 54, 0.1);
+    color: var(--danger-color);
+}
+
+.delete-btn:hover {
+    background: rgba(244, 67, 54, 0.2);
+}
+
+/* 分页控制 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.pagination button {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius);
+    background: white;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.pagination button:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: white;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-info {
+    color: var(--text-secondary);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .notebook-container {
+        padding: 1rem;
+    }
+
+    .notebook-controls {
+        flex-direction: column;
+    }
+
+    .search-box {
+        min-width: 100%;
+    }
+
+    .filter-controls {
+        width: 100%;
+    }
+
+    .filter-controls select {
+        flex: 1;
+    }
+
+    .stats-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-primary: #E0E0E0;
+        --text-secondary: #9E9E9E;
+        --bg-light: #2D2D2D;
+    }
+
+    .mistake-item,
+    .stats-card {
+        background: #1E1E1E;
+    }
+
+    .search-box input,
+    .filter-controls select {
+        background: #2D2D2D;
+        border-color: #404040;
+        color: var(--text-primary);
+    }
+
+    .mistake-tag {
+        background: #2D2D2D;
+    }
+} 

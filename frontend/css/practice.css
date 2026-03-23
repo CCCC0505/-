@@ -1,0 +1,769 @@
+/* practice.css - 练习中心样式 */
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --accent-color: #4895ef;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --success-color: #4CAF50;
+    --error-color: #f44336;
+    --warning-color: #ff9800;
+    --info-color: #2196F3;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-400: #ced4da;
+    --gray-500: #adb5bd;
+    --gray-600: #6c757d;
+    --gray-700: #495057;
+    --gray-800: #343a40;
+    --gray-900: #212529;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 练习容器 */
+.practice-container {
+    padding: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 面包屑导航 */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.breadcrumb a {
+    color: var(--gray-700);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: var(--primary-color);
+}
+
+.breadcrumb .separator {
+    margin: 0 0.5rem;
+    color: var(--gray-500);
+}
+
+/* 练习标题 */
+.practice-header {
+    margin-bottom: 2rem;
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+}
+
+.practice-title {
+    margin-bottom: 1rem;
+}
+
+.practice-title h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.5rem;
+}
+
+.practice-description {
+    color: var(--gray-600);
+    font-size: 1rem;
+}
+
+.practice-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.practice-meta {
+    display: flex;
+    gap: 1rem;
+}
+
+.practice-meta span {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.subject-name {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--primary-color);
+}
+
+.grade-name {
+    background-color: rgba(72, 149, 239, 0.1);
+    color: var(--accent-color);
+}
+
+.knowledge-name {
+    background-color: rgba(63, 55, 201, 0.1);
+    color: var(--secondary-color);
+}
+
+.practice-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background-color: #fff;
+    border: 1px solid var(--gray-300);
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.action-btn:hover {
+    background-color: var(--gray-100);
+    border-color: var(--gray-400);
+}
+
+.action-btn svg {
+    color: var(--gray-600);
+}
+
+.action-btn.hint:hover {
+    color: var(--info-color);
+}
+
+.action-btn.hint:hover svg {
+    color: var(--info-color);
+}
+
+.action-btn.skip:hover {
+    color: var(--warning-color);
+}
+
+.action-btn.skip:hover svg {
+    color: var(--warning-color);
+}
+
+/* 练习内容 */
+.practice-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* 进度条 */
+.practice-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background-color: var(--gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-right: 1rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.9rem;
+    color: var(--gray-700);
+    white-space: nowrap;
+}
+
+/* 左右分栏布局 */
+.practice-columns {
+    display: flex;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+.practice-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.left-column {
+    flex: 1;
+}
+
+.right-column {
+    width: 350px;
+    flex-shrink: 0;
+}
+
+/* 题目容器 */
+.question-container {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    flex: 1;
+    overflow: hidden;
+}
+
+.question-content {
+    padding: 1.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.question-header {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.question-type {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--primary-color);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.question-difficulty {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.question-difficulty.easy {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+}
+
+.question-difficulty.medium {
+    background-color: rgba(255, 152, 0, 0.1);
+    color: var(--warning-color);
+}
+
+.question-difficulty.hard {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: var(--error-color);
+}
+
+.question-body {
+    flex: 1;
+}
+
+.question-text {
+    font-size: 1.1rem;
+    color: var(--gray-800);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.question-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.option:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(67, 97, 238, 0.03);
+}
+
+.option input[type="radio"] {
+    margin-right: 0.8rem;
+    cursor: pointer;
+}
+
+.option label {
+    flex: 1;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--gray-800);
+}
+
+.question-footer {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.submit-btn {
+    padding: 0.7rem 2rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 答案反馈 */
+.answer-feedback {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+    height: 100%;
+}
+
+.feedback-result {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.feedback-result h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.feedback-result.correct h3 {
+    color: var(--success-color);
+}
+
+.feedback-result.incorrect h3 {
+    color: var(--error-color);
+}
+
+.feedback-explanation {
+    padding: 1rem;
+    background-color: var(--gray-100);
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+}
+
+.feedback-explanation h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.8rem;
+}
+
+.feedback-explanation p {
+    color: var(--gray-700);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.feedback-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.next-btn {
+    padding: 0.7rem 2rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.next-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.next-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 热点题目区域样式 */
+.hotspot-container {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.hotspot-header {
+    padding: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.hotspot-title {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.hotspot-title svg {
+    color: var(--primary-color);
+}
+
+.hotspot-title h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+.hotspot-refresh button {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    background-color: rgba(67, 97, 238, 0.08);
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.hotspot-refresh button:hover {
+    background-color: rgba(67, 97, 238, 0.15);
+    transform: translateY(-2px);
+}
+
+.hotspot-refresh button svg {
+    color: var(--primary-color);
+}
+
+.hotspot-subtitle {
+    padding: 0 1.2rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.hotspot-subtitle p {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.hotspot-questions {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.hotspot-item {
+    background-color: var(--gray-100);
+    border-radius: var(--border-radius);
+    padding: 1.2rem;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+
+.hotspot-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    border-color: var(--gray-300);
+}
+
+.hotspot-item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+
+.hotspot-badge {
+    padding: 0.3rem 0.7rem;
+    background-color: rgba(67, 97, 238, 0.15);
+    color: var(--primary-color);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.hotspot-difficulty {
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.hotspot-difficulty:contains('简单') {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: var(--success-color);
+}
+
+.hotspot-difficulty:contains('中等') {
+    background-color: rgba(255, 152, 0, 0.15);
+    color: var(--warning-color);
+}
+
+.hotspot-difficulty:contains('困难') {
+    background-color: rgba(244, 67, 54, 0.15);
+    color: var(--error-color);
+}
+
+.hotspot-item-content {
+    margin-bottom: 1.2rem;
+}
+
+.hotspot-item-content p {
+    font-size: 1rem;
+    color: var(--gray-800);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.hotspot-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.solve-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.solve-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hotspot-tag {
+    padding: 0.3rem 0.7rem;
+    background-color: rgba(33, 150, 243, 0.1);
+    color: var(--info-color);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.hotspot-footer {
+    padding: 1.2rem;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: center;
+}
+
+.more-hotspot-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    background-color: transparent;
+    border: 1px solid var(--gray-300);
+    border-radius: 30px;
+    color: var(--gray-700);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.more-hotspot-btn:hover {
+    background-color: var(--gray-100);
+    border-color: var(--gray-400);
+    transform: translateY(-2px);
+}
+
+.more-hotspot-btn svg {
+    transition: transform 0.2s;
+}
+
+.more-hotspot-btn:hover svg {
+    transform: translateX(3px);
+}
+
+/* AI辅助解题 */
+.ai-help {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+}
+
+.ai-help-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.ai-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.ai-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ai-help-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.ai-help-content {
+    margin-bottom: 1rem;
+}
+
+.ai-help-content p {
+    color: var(--gray-700);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.ai-help-actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.ai-help-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background-color: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.ai-help-btn:hover {
+    background-color: var(--gray-200);
+    border-color: var(--gray-400);
+}
+
+.ai-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--gray-100);
+    border-radius: var(--border-radius);
+    color: var(--gray-800);
+    line-height: 1.6;
+}
+
+/* 响应式调整 */
+@media (max-width: 1024px) {
+    .practice-columns {
+        flex-direction: column;
+    }
+    
+    .right-column {
+        width: 100%;
+    }
+    
+    .hotspot-questions {
+        max-height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .practice-container {
+        padding: 1rem;
+    }
+    
+    .practice-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .practice-actions {
+        width: 100%;
+    }
+    
+    .question-header {
+        flex-wrap: wrap;
+    }
+    
+    .ai-help-actions {
+        flex-direction: column;
+    }
+    
+    .ai-help-btn {
+        width: 100%;
+    }
+    
+    .hotspot-item-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    
+    .solve-btn {
+        width: 100%;
+    }
+} 

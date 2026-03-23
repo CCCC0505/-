@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习分析 - AI学习伙伴</title>
+    <link rel="stylesheet" href="../css/shouye.css?v=20260322-homefix-1">
+    <link rel="stylesheet" href="../css/analysis.css?v=20260322-homefix-1">
+    <link rel="stylesheet" href="../css/subject-icons.css?v=20260322-homefix-1">
+    <!-- 添加谷歌字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 添加动画库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- 添加图表库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- 背景装饰元素 -->
+    <div class="bg-elements">
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+        <div class="bg-circle bg-circle-3"></div>
+        <div class="bg-dot-grid"></div>
+        <div class="bg-pattern"></div>
+    </div>
+
+    <div class="container">
+        <!-- 左侧导航栏 -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="circle"></div>
+                </div>
+                <div class="logo-text">
+                    <h3>AI学习伙伴</h3>
+                    <p>个性化学习助手</p>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="../index.html" class="nav-item">
+                    <span class="nav-icon home-icon"></span>
+                    <span>首页</span>
+                </a>
+                <a href="subject.html" class="nav-item">
+                    <span class="nav-icon course-icon"></span>
+                    <span>学科资料</span>
+                </a>
+                <a href="practice.html" class="nav-item">
+                    <span class="nav-icon practice-icon"></span>
+                    <span>练习中心</span>
+                </a>
+                <a href="analysis.html" class="nav-item active">
+                    <span class="nav-icon analysis-icon"></span>
+                    <span>学习分析</span>
+                </a>
+                <a href="notebook.html" class="nav-item">
+                    <span class="nav-icon notebook-icon"></span>
+                    <span>错题本</span>
+                </a>
+                <a href="personal.html" class="nav-item">
+                    <span class="nav-icon user-icon"></span>
+                    <span>个人中心</span>
+                </a>
+            </nav>
+
+            <div class="avatar-container" id="ai-avatar-container">
+                <div class="avatar">
+                    <img src="../images/生成卡通形象.png" alt="AI助手头像">
+                </div>
+                <div class="chat-bubble">
+                    <p>要查看学习分析报告吗？</p>
+                    <p>我可以为你提供学习建议</p>
+                </div>
+            </div>
+            
+            <!-- AI助手对话界面 -->
+            <div class="ai-sidebar-chat" id="ai-sidebar-chat">
+                <div class="ai-chat-header">
+                    <h3>AI学习助手</h3>
+                </div>
+                <div class="ai-chat-messages" id="ai-sidebar-messages">
+                    <!-- 消息将在这里动态加载 -->
+                </div>
+                <div class="ai-chat-input">
+                    <input type="text" id="ai-sidebar-input" placeholder="有什么想问我的...">
+                    <button id="ai-sidebar-send">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <div class="analysis-container">
+                <!-- 标题区域 -->
+                <div class="analysis-header">
+                    <h1>学习情况分析</h1>
+                    <p class="analysis-description">基于AI的学习数据分析，帮助你了解学习进展和提升空间</p>
+                </div>
+
+                <!-- 学科选择和时间范围筛选 -->
+                <div class="analysis-filters">
+                    <div class="filter-group">
+                        <label for="subject-select">学科</label>
+                        <select id="subject-select">
+                            <option value="all">全部学科</option>
+                            <option value="physics" selected>物理</option>
+                            <option value="math">数学</option>
+                            <option value="chemistry">化学</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="date-range">时间范围</label>
+                        <select id="date-range">
+                            <option value="week">最近一周</option>
+                            <option value="month" selected>最近一个月</option>
+                            <option value="semester">本学期</option>
+                            <option value="year">本学年</option>
+                        </select>
+                    </div>
+                    <button id="generate-report-btn" class="generate-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 12L13 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M21 6L13 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M21 18L13 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M4 12H5C6.10457 12 7 11.1046 7 10V10C7 8.89543 6.10457 8 5 8H4V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        生成报告
+                    </button>
+                </div>
+
+                <!-- 摘要卡片 -->
+                <div class="summary-section">
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <div class="summary-icon study-time-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="summary-info">
+                                <h3>学习时长</h3>
+                                <div class="summary-data">42.5<span>小时</span></div>
+                                <div class="trend up">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>+12%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-icon accuracy-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div class="summary-info">
+                                <h3>正确率</h3>
+                                <div class="summary-data">76<span>%</span></div>
+                                <div class="trend up">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>+5%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-icon mastery-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div class="summary-info">
+                                <h3>知识点掌握</h3>
+                                <div class="summary-data">24<span>个</span></div>
+                                <div class="trend up">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18 15L12 9L6 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>+8%</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-icon weakness-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M8 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="summary-info">
+                                <h3>薄弱知识点</h3>
+                                <div class="summary-data">8<span>个</span></div>
+                                <div class="trend down">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>-3%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 图表区域 -->
+                <div class="charts-section">
+                    <div class="chart-row">
+                        <!-- 进度图表 -->
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>学习进度</h3>
+                                <div class="chart-legend">
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background-color: rgba(124, 77, 255, 0.8);"></span>
+                                        <span>当前进度</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background-color: rgba(124, 77, 255, 0.2);"></span>
+                                        <span>目标进度</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="progressChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- 正确率图表 -->
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>答题正确率</h3>
+                                <div class="chart-legend">
+                                    <div class="legend-item">
+                                        <span class="legend-color" style="background-color: rgba(61, 90, 254, 0.8);"></span>
+                                        <span>正确率</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="accuracyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-row">
+                        <!-- 知识点掌握程度 -->
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>知识点掌握程度</h3>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="masteryChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- 学习时间分布 -->
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h3>学习时间分布</h3>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="timeDistributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 薄弱知识点分析 -->
+                <div class="weakness-section">
+                    <div class="section-header">
+                        <h2>薄弱知识点分析</h2>
+                        <p>以下知识点正确率较低，建议重点复习</p>
+                    </div>
+                    <div class="weakness-list">
+                        <div class="weakness-item">
+                            <div class="weakness-header">
+                                <div class="weakness-name">
+                                    <h4>牛顿第三定律</h4>
+                                    <span class="weakness-subject">物理</span>
+                                </div>
+                                <div class="weakness-stats">
+                                    <div class="accuracy-bar">
+                                        <div class="accuracy-fill" style="width: 35%;">35%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="weakness-detail">
+                                <p>在相关习题中，你经常混淆作用力与反作用力的特点和应用场景。</p>
+                                <div class="weakness-actions">
+                                    <a href="subject-1.html?subject=物理&knowledge=牛顿第三定律" class="action-link">复习知识点</a>
+                                    <a href="practice.html?subject=物理&knowledge=牛顿第三定律" class="action-link">专项练习</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="weakness-item">
+                            <div class="weakness-header">
+                                <div class="weakness-name">
+                                    <h4>电学中的串并联电路</h4>
+                                    <span class="weakness-subject">物理</span>
+                                </div>
+                                <div class="weakness-stats">
+                                    <div class="accuracy-bar">
+                                        <div class="accuracy-fill" style="width: 42%;">42%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="weakness-detail">
+                                <p>你在计算复杂电路的电阻、电流和电压问题上存在困难，尤其是混合电路。</p>
+                                <div class="weakness-actions">
+                                    <a href="subject-1.html?subject=物理&knowledge=串并联电路" class="action-link">复习知识点</a>
+                                    <a href="practice.html?subject=物理&knowledge=串并联电路" class="action-link">专项练习</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="weakness-item">
+                            <div class="weakness-header">
+                                <div class="weakness-name">
+                                    <h4>光的折射定律</h4>
+                                    <span class="weakness-subject">物理</span>
+                                </div>
+                                <div class="weakness-stats">
+                                    <div class="accuracy-bar">
+                                        <div class="accuracy-fill" style="width: 48%;">48%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="weakness-detail">
+                                <p>你对光从一种介质进入另一种介质时的路径变化理解不够清晰，计算能力有待提高。</p>
+                                <div class="weakness-actions">
+                                    <a href="subject-1.html?subject=物理&knowledge=光的折射" class="action-link">复习知识点</a>
+                                    <a href="practice.html?subject=物理&knowledge=光的折射" class="action-link">专项练习</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI个性化学习报告 -->
+                <div class="ai-report-section">
+                    <div class="section-header with-icon">
+                        <div class="section-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 16V12L14 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M12 8V7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M12 17V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M7 12H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M16 12H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <h2>AI个性化学习报告</h2>
+                    </div>
+                    <div class="ai-report-container">
+                        <div class="ai-profile">
+                            <div class="ai-avatar">
+                                <img src="../images/生成卡通形象.png" alt="AI头像">
+                            </div>
+                            <div class="ai-info">
+                                <h3>你的AI学习助手</h3>
+                                <p>基于你的学习数据生成个性化报告</p>
+                            </div>
+                        </div>
+                        <div class="ai-report-content">
+                            <h3>学习情况总结</h3>
+                            <p>根据过去一个月的学习数据分析，你在物理学科上表现出稳定的进步，特别是在力学和热学部分。与上月相比，你的整体答题正确率提升了5个百分点，达到76%。</p>
+                            
+                            <h3>优势领域</h3>
+                            <p>你在以下知识点表现出色：</p>
+                            <ul>
+                                <li><strong>牛顿第一、二定律</strong>：正确率达到92%，对基础力学概念掌握良好</li>
+                                <li><strong>热力学第一定律</strong>：正确率达到88%，能够灵活运用</li>
+                                <li><strong>简谐运动</strong>：正确率达到85%，对周期运动理解透彻</li>
+                            </ul>
+                            
+                            <h3>待改进领域</h3>
+                            <p>建议重点关注以下知识点：</p>
+                            <ul>
+                                <li><strong>牛顿第三定律</strong>：目前正确率仅为35%，建议重新学习并多做练习</li>
+                                <li><strong>电学中的串并联电路</strong>：正确率42%，需要加强对基本原理的理解</li>
+                                <li><strong>光的折射定律</strong>：正确率48%，建议结合实例加深理解</li>
+                            </ul>
+                            
+                            <h3>学习习惯分析</h3>
+                            <p>你的学习时间分布显示，晚上9点到11点是你的高效学习时段，但学习时长分布不均匀，存在突击学习的情况。建议制定更均衡的学习计划，保持每天稳定的学习时长。</p>
+                            
+                            <h3>个性化学习建议</h3>
+                            <ol>
+                                <li><strong>知识点强化</strong>：针对薄弱知识点，建议采用"知识点回顾 → 例题分析 → 同类题练习 → 综合应用"的学习路径</li>
+                                <li><strong>学习计划调整</strong>：建议每天安排30-45分钟用于薄弱知识点的复习，每周进行一次系统性的知识回顾</li>
+                                <li><strong>学习方法优化</strong>：对于电学和光学内容，建议结合视频和交互式动画加深理解，而不仅仅依赖文字材料</li>
+                                <li><strong>错题复习策略</strong>：建议采用间隔重复法复习错题，而不是一次性集中复习，提高记忆效果</li>
+                            </ol>
+                        </div>
+                        <div class="ai-report-actions">
+                            <button id="generate-plan-btn" class="plan-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M9 7H7V9H9V7Z" fill="currentColor"/>
+                                    <path d="M9 12H7V14H9V12Z" fill="currentColor"/>
+                                    <path d="M9 17H7V19H9V17Z" fill="currentColor"/>
+                                    <path d="M13 7H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M13 12H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M13 17H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                                生成学习计划
+                            </button>
+                            <button id="download-report-btn" class="download-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                下载报告
+                            </button>
+                            <button id="share-report-btn" class="share-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="2"/>
+                                    <line x1="9" y1="10.5" x2="15" y2="6.5" stroke="currentColor" stroke-width="2"/>
+                                    <line x1="9" y1="13.5" x2="15" y2="17.5" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                分享报告
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 学习计划推荐 -->
+                <div class="learning-plan-section" id="learning-plan-section" style="display: none;">
+                    <div class="section-header with-icon">
+                        <div class="section-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                                <path d="M16 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M8 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M3 10H21" stroke="currentColor" stroke-width="2"/>
+                                <path d="M9 16L11 18L15 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h2>个性化学习计划</h2>
+                    </div>
+                    <div class="learning-plan-container">
+                        <div class="plan-header">
+                            <h3>未来两周学习安排</h3>
+                            <p>基于你的学习情况和薄弱环节，AI为你定制的学习计划</p>
+                        </div>
+                        
+                        <div class="weekly-plans">
+                            <div class="weekly-plan">
+                                <div class="plan-week">第一周</div>
+                                <div class="daily-plans">
+                                    <div class="daily-plan">
+                                        <div class="plan-day">周一</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">30分钟</span>
+                                                <span class="task">牛顿第三定律知识点复习</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">45分钟</span>
+                                                <span class="task">牛顿第三定律基础习题训练</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-plan">
+                                        <div class="plan-day">周二</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">30分钟</span>
+                                                <span class="task">串并联电路概念复习</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">45分钟</span>
+                                                <span class="task">电路分析基础练习</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-plan">
+                                        <div class="plan-day">周三</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">30分钟</span>
+                                                <span class="task">光的折射定律复习</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">45分钟</span>
+                                                <span class="task">光学问题解题技巧练习</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-plan">
+                                        <div class="plan-day">周四</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">30分钟</span>
+                                                <span class="task">牛顿运动定律综合练习</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">45分钟</span>
+                                                <span class="task">力学应用题专项训练</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-plan">
+                                        <div class="plan-day">周五</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">30分钟</span>
+                                                <span class="task">串并联电路进阶练习</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">45分钟</span>
+                                                <span class="task">电学综合问题训练</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-plan weekend">
+                                        <div class="plan-day">周末</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">60分钟</span>
+                                                <span class="task">第一周知识点回顾与错题分析</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">90分钟</span>
+                                                <span class="task">综合测试与自我评估</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="weekly-plan">
+                                <div class="plan-week">第二周</div>
+                                <div class="daily-plans">
+                                    <div class="daily-plan">
+                                        <div class="plan-day">周一</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">30分钟</span>
+                                                <span class="task">光的折射进阶内容学习</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">45分钟</span>
+                                                <span class="task">光学计算题专项训练</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-plan">
+                                        <div class="plan-day">周二</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">30分钟</span>
+                                                <span class="task">电磁学关联知识点学习</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">45分钟</span>
+                                                <span class="task">电磁感应问题练习</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-plan">
+                                        <div class="plan-day">周三</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">30分钟</span>
+                                                <span class="task">牛顿第三定律深入理解</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">45分钟</span>
+                                                <span class="task">作用力与反作用力专题练习</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-plan">
+                                        <div class="plan-day">周四</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">30分钟</span>
+                                                <span class="task">混合电路分析方法学习</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">45分钟</span>
+                                                <span class="task">复杂电路问题解题训练</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-plan">
+                                        <div class="plan-day">周五</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">30分钟</span>
+                                                <span class="task">光学折射应用场景学习</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">45分钟</span>
+                                                <span class="task">光学应用题专项训练</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-plan weekend">
+                                        <div class="plan-day">周末</div>
+                                        <div class="plan-content">
+                                            <div class="plan-task">
+                                                <span class="time">60分钟</span>
+                                                <span class="task">两周学习内容系统总结</span>
+                                            </div>
+                                            <div class="plan-task">
+                                                <span class="time">90分钟</span>
+                                                <span class="task">综合模拟测试与知识点查漏补缺</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="plan-actions">
+                            <button id="save-plan-btn" class="save-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16L21 8V19C21 20.1046 20.1046 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M7 3V8H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                保存计划
+                            </button>
+                            <button id="adjust-plan-btn" class="adjust-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 20H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M16.5 3.5C16.8978 3.10217 17.4374 2.87868 18 2.87868C18.2786 2.87868 18.5544 2.93355 18.8118 3.04015C19.0692 3.14676 19.303 3.30301 19.5 3.5C19.697 3.69699 19.8532 3.93083 19.9598 4.18821C20.0665 4.44558 20.1213 4.72142 20.1213 5C20.1213 5.27858 20.0665 5.55442 19.9598 5.81179C19.8532 6.06916 19.697 6.30301 19.5 6.5L7 19L3 20L4 16L16.5 3.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                调整计划
+                            </button>
+                            <button id="calendar-sync-btn" class="calendar-btn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M16 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M8 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M3 10H21" stroke="currentColor" stroke-width="2"/>
+                                    <circle cx="12" cy="15" r="2" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                同步到日历
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 学习建议和推荐资源 -->
+                <div class="recommendations-section">
+                    <div class="section-header">
+                        <h2>个性化学习建议</h2>
+                    </div>
+                    <div class="recommendations-container">
+                        <div class="recommendation-cards">
+                            <div class="recommendation-card">
+                                <div class="recommendation-icon resource-icon"></div>
+                                <div class="recommendation-content">
+                                    <h4>推荐学习资源</h4>
+                                    <ul>
+                                        <li>
+                                            <a href="#">《物理思维与解题方法》视频课程</a>
+                                            <span class="badge">高效</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">《电路分析入门到精通》交互式课程</a>
+                                            <span class="badge">热门</span>
+                                        </li>
+                                        <li>
+                                            <a href="#">《光学核心概念》图解与动画</a>
+                                            <span class="badge">直观</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="recommendation-card">
+                                <div class="recommendation-icon method-icon"></div>
+                                <div class="recommendation-content">
+                                    <h4>学习方法优化</h4>
+                                    <ul>
+                                        <li>
+                                            <strong>费曼学习法</strong>：尝试用自己的话解释知识点，找出理解不足之处
+                                        </li>
+                                        <li>
+                                            <strong>间隔重复</strong>：采用科学的间隔复习计划，提高记忆效率
+                                        </li>
+                                        <li>
+                                            <strong>实例联系</strong>：将抽象概念与日常生活中的实例关联，加深理解
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="recommendation-card">
+                                <div class="recommendation-icon exercise-icon"></div>
+                                <div class="recommendation-content">
+                                    <h4>推荐练习方式</h4>
+                                    <ul>
+                                        <li>
+                                            <strong>渐进式难度</strong>：从基础题到中等难度再到高难度，循序渐进
+                                        </li>
+                                        <li>
+                                            <strong>限时训练</strong>：设定答题时间限制，提高解题速度和思维敏捷度
+                                        </li>
+                                        <li>
+                                            <strong>错题重做</strong>：对错题进行分类整理，定期重做，巩固薄弱点
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/shouye.js?v=20260322-homefix-1"></script>
+    <script src="../js/ai-service.js?v=20260322-homefix-1"></script>
+    <script src="../js/analysis.js?v=20260322-homefix-1"></script>
+</body>
+</html>
