@@ -2,7 +2,11 @@ import os
 from functools import lru_cache
 from typing import List
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - optional dependency for local convenience
+    def load_dotenv() -> bool:
+        return False
 
 
 load_dotenv()

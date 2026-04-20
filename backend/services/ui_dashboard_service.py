@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import datetime, timedelta
+from math import exp
 from typing import Dict, Iterable, List, Optional
 
 from fastapi import HTTPException
@@ -30,6 +31,13 @@ RANGE_DAY_MAP = {
     "semester": 120,
     "year": 365,
     "all": None,
+}
+
+DIFFICULTY_FACTORS = {
+    1: 0.95,
+    2: 1.00,
+    3: 1.08,
+    4: 1.15,
 }
 
 
@@ -98,7 +106,11 @@ class UIDashboardService:
         latest_payload = self.portrait_service.snapshot_to_payload(latest_snapshot)
         latest_recommendation = self.recommendation_service.latest_summary(student_id)
         events = self._answer_events(student_id, range_key)
-        weak_items = self._build_weakness_items(latest_payload, events)
+        all_events = self._answer_events(student_id, "all")
+        knowledge_tracking = self._build_knowledge_tracking(student_id, latest_payload, all_events)
+        weak_items = self._build_weakness_items(latest_payload, events, knowledge_tracking)
+        recommendation_upgrade = self.recommendation_service.compare_recommendation_schemes(student_id, requested_count=5)
+        emotion_support = self._build_emotion_support(latest_payload, all_events)
 
         return {
             "student_id": student.student_id,
@@ -113,10 +125,14 @@ class UIDashboardService:
                 "time_distribution": self._build_time_distribution_chart(events),
             },
             "weakness_items": weak_items,
-            "report": self._build_analysis_report(student, latest_payload, latest_recommendation, weak_items, events),
+            "report": self._build_analysis_report(student, latest_payload, latest_recommendation, weak_items, events, knowledge_tracking),
             "learning_plan": self._build_learning_plan(latest_payload, latest_recommendation),
             "portrait_modeling": self.build_portrait_modeling(student_id),
             "modeling_basis": self.build_modeling_basis(),
+            "knowledge_tracking": knowledge_tracking,
+            "recommendation_upgrade": recommendation_upgrade,
+            "defense_assets": self._build_defense_assets(),
+            "emotion_support": emotion_support,
         }
 
     def build_personal_dashboard(self, student_id: str) -> Dict[str, object]:
@@ -267,6 +283,14 @@ class UIDashboardService:
                 "当前成长画像是一个规则化证据模型 V1：用题目作答证据、知识点标签、认知层级标签和问卷特征共同构建多维画像。"
                 "它参考了认知诊断、知识追踪和自我调节学习研究，但不宣称当前版本已经训练出完整的参数化 G-DINA/BKT 模型。"
             ),
+            "upgrade_scope": {
+                "one_liner": "我们在现有画像和推荐系统上，增加了知识点长期掌握追踪与短期遗忘风险评估，并将两者融合到个性化推荐中。",
+                "delivery": "在原有规则画像基础上，补充知识追踪与遗忘风险机制，增强个性化推荐。",
+                "long_term_model": "轻量 KT",
+                "short_term_model": "遗忘曲线",
+                "fusion_layer": "推荐优先级与解释",
+                "non_scope": ["LSTM 上线", "视觉/语音情感计算", "多学科产品化"],
+            },
             "modeling_notes": [
                 "基础得分由作答正误、题目难度、认知层级权重和目标用时共同决定。",
                 "诊断题负责建立初始画像，练习题负责做增量更新，画像快照按版本串联。",
@@ -285,7 +309,7 @@ class UIDashboardService:
             "references": MODELING_REFERENCES,
             "future_upgrade": [
                 "下一阶段可引入显式 Q-matrix 与 G-DINA / DINA 参数学习，替代当前规则权重。",
-                "可用真实练习序列训练 BKT / DKT 类时间序列模型，替代当前增量更新策略。",
+                "可用真实练习序列继续校准轻量 KT / BKT 参数，替代当前固定增量策略。",
                 "可加入题目区分度、猜测/失误参数，提升心理测量解释力。",
             ],
         }
@@ -314,6 +338,13 @@ class UIDashboardService:
         return {row.question_id: row for row in rows}
 
     def _answer_events(self, student_id: str, range_key: str) -> List[Dict[str, object]]:
+        snapshot_version_lookup = {
+            row.snapshot_id: row.version_number
+            for row in self.db.query(PortraitSnapshot)
+            .filter(PortraitSnapshot.student_id == student_id)
+            .order_by(PortraitSnapshot.version_number.asc(), PortraitSnapshot.id.asc())
+            .all()
+        }
         practice_rows = (
             self.db.query(PracticeAnswer)
             .filter(PracticeAnswer.student_id == student_id)
@@ -328,7 +359,7 @@ class UIDashboardService:
         )
         question_lookup = self._question_lookup([row.question_id for row in practice_rows + diagnostic_rows])
         events = []
-        for row in list(practice_rows) + list(diagnostic_rows):
+        for row in practice_rows:
             if not self._in_range(row.created_at, range_key):
                 continue
             question = question_lookup.get(row.question_id)
@@ -336,15 +367,199 @@ class UIDashboardService:
                 continue
             events.append(
                 {
+                    "student_id": student_id,
                     "question_id": row.question_id,
                     "knowledge_tags": json_loads(question.knowledge_tags_json, []),
                     "is_correct": bool(row.is_correct),
                     "duration_seconds": float(row.duration_seconds),
+                    "difficulty": int(question.difficulty),
                     "created_at": row.created_at,
                     "title": question.title,
+                    "snapshot_version": snapshot_version_lookup.get(row.snapshot_id),
+                    "stage": "practice",
+                    "target_duration_seconds": int(question.target_duration_seconds),
                 }
             )
+        for row in diagnostic_rows:
+            if not self._in_range(row.created_at, range_key):
+                continue
+            question = question_lookup.get(row.question_id)
+            if question is None:
+                continue
+            events.append(
+                {
+                    "student_id": student_id,
+                    "question_id": row.question_id,
+                    "knowledge_tags": json_loads(question.knowledge_tags_json, []),
+                    "is_correct": bool(row.is_correct),
+                    "duration_seconds": float(row.duration_seconds),
+                    "difficulty": int(question.difficulty),
+                    "created_at": row.created_at,
+                    "title": question.title,
+                    "snapshot_version": 0,
+                    "stage": "diagnostic",
+                    "target_duration_seconds": int(question.target_duration_seconds),
+                }
+            )
+        events.sort(key=lambda item: (item["created_at"], item["question_id"], item["stage"]))
         return events
+
+    def _build_knowledge_tracking(
+        self,
+        student_id: str,
+        latest_payload: Dict[str, object],
+        events: List[Dict[str, object]],
+    ) -> Dict[str, object]:
+        grouped: Dict[str, List[Dict[str, object]]] = defaultdict(list)
+        sequence_rows: List[Dict[str, object]] = []
+        for event in events:
+            for tag in event["knowledge_tags"] or ["未分类"]:
+                grouped[tag].append(event)
+                sequence_rows.append(
+                    {
+                        "student_id": student_id,
+                        "question_id": event["question_id"],
+                        "knowledge_tag": tag,
+                        "created_at": event["created_at"].isoformat(),
+                        "is_correct": bool(event["is_correct"]),
+                        "duration_seconds": float(event["duration_seconds"]),
+                        "difficulty": int(event["difficulty"]),
+                        "snapshot_version": event["snapshot_version"],
+                        "stage": event["stage"],
+                    }
+                )
+
+        baseline_map = {
+            item["knowledge_tag"]: float(item["mastery_score"])
+            for item in latest_payload["knowledge_matrix"]
+        }
+        states: List[Dict[str, object]] = []
+        now = datetime.utcnow()
+
+        for knowledge_tag, tag_events in grouped.items():
+            ordered = sorted(tag_events, key=lambda item: (item["created_at"], item["question_id"]))
+            last_event = ordered[-1]
+            review_count = len(ordered)
+            last_practiced_at = last_event["created_at"]
+            recent_window = ordered[-5:]
+            recent_results = [1.0 if item["is_correct"] else 0.0 for item in recent_window]
+            recent_accuracy = sum(recent_results) / max(1, len(recent_results))
+            previous_window = ordered[-10:-5]
+            previous_results = [1.0 if item["is_correct"] else 0.0 for item in previous_window]
+            previous_accuracy = (
+                sum(previous_results) / len(previous_results)
+                if previous_results
+                else recent_accuracy
+            )
+
+            intervals = []
+            for previous, current in zip(ordered, ordered[1:]):
+                delta_days = max((current["created_at"] - previous["created_at"]).total_seconds() / 86400.0, 0.0)
+                intervals.append(delta_days)
+            interval_days = round(sum(intervals) / len(intervals), 1) if intervals else 1.0
+
+            mastery_score = baseline_map.get(knowledge_tag, 55.0)
+            for item in recent_window:
+                factor = DIFFICULTY_FACTORS.get(int(item["difficulty"]), 1.0)
+                mastery_score += (2.8 if item["is_correct"] else -3.6) * factor
+            mastery_score += (recent_accuracy - 0.5) * 8.0
+            mastery_score = max(0.0, min(100.0, round(mastery_score, 1)))
+
+            trend_delta = round((recent_accuracy - previous_accuracy) * 100, 1)
+            if trend_delta >= 8:
+                trend_label = "上升"
+            elif trend_delta <= -8:
+                trend_label = "下降"
+            else:
+                trend_label = "稳定"
+
+            delta_t = max((now - last_practiced_at).total_seconds() / 86400.0, 0.0)
+            forgetting_lambda = 0.12
+            if recent_accuracy < 0.67:
+                forgetting_lambda += 0.06
+            if not last_event["is_correct"]:
+                forgetting_lambda += 0.05
+            if review_count <= 2:
+                forgetting_lambda += 0.03
+            adjusted_delta = delta_t / max(interval_days, 1.0)
+            retention = max(0.0, min(1.0, exp(-forgetting_lambda * adjusted_delta)))
+            forgetting_risk = round(1 - retention, 3)
+            if forgetting_risk >= 0.7:
+                risk_level = "高遗忘风险"
+            elif forgetting_risk >= 0.4:
+                risk_level = "中遗忘风险"
+            else:
+                risk_level = "低遗忘风险"
+
+            if adjusted_delta >= 2 and recent_accuracy < 0.67:
+                review_reason = "很久没练 + 之前不稳定 = 优先复习"
+            elif adjusted_delta >= 2:
+                review_reason = "距离上次练习时间较长，建议优先回顾"
+            elif not last_event["is_correct"]:
+                review_reason = "最近一次练习答错，建议尽快回补"
+            elif trend_label == "下降":
+                review_reason = "最近表现有下降趋势，需要再次巩固"
+            else:
+                review_reason = "近期状态相对稳定，可按计划复习"
+
+            needs_attention = mastery_score < 60 or trend_label == "下降"
+            priority_score = round(
+                forgetting_risk * 70
+                + (100 - mastery_score) * 0.2
+                + (8 if needs_attention else 0)
+                + (5 if trend_label == "下降" else 0),
+                1,
+            )
+
+            states.append(
+                {
+                    "knowledge_tag": knowledge_tag,
+                    "last_practiced_at": last_practiced_at.isoformat(),
+                    "review_count": review_count,
+                    "last_result": "答对" if last_event["is_correct"] else "答错",
+                    "interval_days": interval_days,
+                    "current_mastery": mastery_score,
+                    "trend_label": trend_label,
+                    "trend_delta": trend_delta,
+                    "needs_attention": needs_attention,
+                    "retention": round(retention, 3),
+                    "forgetting_risk": forgetting_risk,
+                    "risk_level": risk_level,
+                    "review_reason": review_reason,
+                    "priority_score": priority_score,
+                }
+            )
+
+        states.sort(key=lambda item: (-item["priority_score"], item["current_mastery"], item["knowledge_tag"]))
+        return {
+            "upgrade_scope": {
+                "one_liner": "我们在现有画像和推荐系统上，增加了知识点长期掌握追踪与短期遗忘风险评估，并将两者融合到个性化推荐中。",
+                "delivery": "在原有规则画像基础上，补充知识追踪与遗忘风险机制，增强个性化推荐。",
+                "long_term_model": "轻量 KT",
+                "short_term_model": "遗忘曲线",
+                "fusion_layer": "推荐优先级与解释",
+                "non_scope": ["LSTM 上线", "视觉/语音情感计算", "多学科产品化"],
+            },
+            "formulas": {
+                "retention": "retention = exp(-lambda * delta_t)",
+                "forgetting_risk": "forgetting_risk = 1 - retention",
+                "mastery": "mastery_score = 历史掌握度 + 答对加分 - 答错扣分 + 最近表现平滑",
+            },
+            "data_fields": [
+                "student_id",
+                "question_id",
+                "knowledge_tags",
+                "created_at",
+                "is_correct",
+                "duration_seconds",
+                "difficulty",
+                "snapshot_version",
+            ],
+            "top_review": states[:3],
+            "knowledge_states": states,
+            "sequence_total": len(sequence_rows),
+            "sequence_rows": sorted(sequence_rows, key=lambda item: item["created_at"], reverse=True)[:40],
+        }
 
     def _build_analysis_summary_cards(self, student_id: str, latest_payload: Dict[str, object], events: List[Dict[str, object]]) -> List[Dict[str, object]]:
         total_hours = round(sum(float(item["duration_seconds"]) for item in events) / 3600, 1)
@@ -418,22 +633,35 @@ class UIDashboardService:
             "values": [round(value, 1) for _, value in rows],
         }
 
-    def _build_weakness_items(self, latest_payload: Dict[str, object], events: List[Dict[str, object]]) -> List[Dict[str, object]]:
+    def _build_weakness_items(
+        self,
+        latest_payload: Dict[str, object],
+        events: List[Dict[str, object]],
+        knowledge_tracking: Dict[str, object],
+    ) -> List[Dict[str, object]]:
         accuracy_map = {}
         accuracy_chart = self._build_accuracy_chart(latest_payload, events)
         for label, value in zip(accuracy_chart["labels"], accuracy_chart["values"]):
             accuracy_map[label] = value
         items = []
+        tracking_map = {
+            item["knowledge_tag"]: item
+            for item in knowledge_tracking.get("knowledge_states", [])
+        }
         for row in latest_payload["knowledge_matrix"]:
             if not row["needs_attention"] and len(items) >= 3:
                 continue
+            tracking_state = tracking_map.get(row["knowledge_tag"], {})
             items.append(
                 {
                     "knowledge_tag": row["knowledge_tag"],
                     "accuracy": round(float(accuracy_map.get(row["knowledge_tag"], row["mastery_score"])), 1),
-                    "description": "；".join(row["evidence"][:2]) or "该知识点近期表现波动，建议按“回顾-例题-专项训练”路径复盘。",
+                    "description": tracking_state.get("review_reason") or "；".join(row["evidence"][:2]) or "该知识点近期表现波动，建议按“回顾-例题-专项训练”路径复盘。",
                     "review_url": f"subject-1.html?subject=数学&knowledge={row['knowledge_tag']}",
                     "practice_url": f"practice.html?subject=数学&knowledge={row['knowledge_tag']}",
+                    "risk_level": tracking_state.get("risk_level", "中遗忘风险"),
+                    "mastery": tracking_state.get("current_mastery", round(float(row["mastery_score"]), 1)),
+                    "trend_label": tracking_state.get("trend_label", "稳定"),
                 }
             )
             if len(items) >= 3:
@@ -447,6 +675,7 @@ class UIDashboardService:
         latest_recommendation: Optional[Dict[str, object]],
         weak_items: List[Dict[str, object]],
         events: List[Dict[str, object]],
+        knowledge_tracking: Dict[str, object],
     ) -> Dict[str, object]:
         dimensions = latest_payload["dimensions"]
         strongest = max(dimensions, key=lambda item: float(item["score"]))
@@ -486,12 +715,74 @@ class UIDashboardService:
         if latest_recommendation:
             recommendations.append(latest_recommendation["overall_commentary"] or "继续完成当前训练批次。")
         recommendations.extend(f"重点回看：{item['knowledge_tag']}" for item in weak_items[:2])
+        recommendations.extend(
+            f"优先复习：{item['knowledge_tag']}（{item['risk_level']}）"
+            for item in knowledge_tracking.get("top_review", [])[:2]
+        )
         return {
             "summary": latest_payload["teacher_commentary"],
             "strengths": strengths[:3],
             "improvements": improvements[:3],
             "habits": habits,
             "recommendations": list(dict.fromkeys(recommendations))[:5],
+        }
+
+    def _build_defense_assets(self) -> Dict[str, object]:
+        return {
+            "plain_summary": "长期模型看学生会不会，短期模型看学生会不会忘，两者一起决定当前先练什么。",
+            "one_minute_script": (
+                "我们先收集学生在诊断和练习中的题目证据，再按知识点做长期掌握追踪。"
+                "长期层用轻量 KT 看这个知识点到底掌握得怎么样、趋势是在上升还是下降；"
+                "短期层用遗忘曲线看距离上次练习多久、现在是不是快忘了。"
+                "最后把长期薄弱、短期遗忘风险和最近错误波动融合成推荐优先级，"
+                "所以系统不仅能推荐题，还能解释这道题是因为长期不会、短期快忘了，还是最近表现不稳定而被前置。"
+            ),
+            "flow_steps": [
+                {"title": "证据采集", "detail": "收集 student_id、question_id、knowledge_tags、created_at、is_correct、duration_seconds、difficulty、snapshot_version。"},
+                {"title": "长期模型", "detail": "对每个知识点做轻量 KT，输出当前掌握度、最近趋势、是否需要关注。"},
+                {"title": "短期模型", "detail": "用遗忘曲线估计 retention 与 forgetting_risk，并划分高/中/低风险。"},
+                {"title": "融合推荐", "detail": "把长期薄弱、遗忘风险和错误波动融合成 priority，再输出整体理由和单题理由。"},
+            ],
+        }
+
+    def _build_emotion_support(self, latest_payload: Dict[str, object], events: List[Dict[str, object]]) -> Dict[str, object]:
+        trait_map = {
+            item["trait_code"]: float(item["trait_value"])
+            for item in latest_payload.get("learner_traits", [])
+        }
+        confidence_level = round(trait_map.get("confidence_level", 60.0), 1)
+        recent_events = sorted(events, key=lambda item: item["created_at"], reverse=True)[:8]
+        consecutive_errors = 0
+        for item in recent_events:
+            if item["is_correct"]:
+                break
+            consecutive_errors += 1
+        overtime_count = sum(
+            1
+            for item in recent_events
+            if float(item["duration_seconds"]) > float(item.get("target_duration_seconds") or 0) * 1.3
+        )
+        interruption_days = 0
+        if recent_events:
+            interruption_days = max(0, round((datetime.utcnow() - recent_events[0]["created_at"]).total_seconds() / 86400.0))
+
+        if consecutive_errors >= 3 or (confidence_level < 45 and overtime_count >= 2):
+            status = "轻度挫败风险"
+            prompt = "当前连续错误较多，建议先进行巩固训练。"
+        elif consecutive_errors >= 2 or overtime_count >= 3 or interruption_days >= 5 or confidence_level < 55:
+            status = "建议鼓励"
+            prompt = "当前状态有波动，建议先从低门槛题开始，逐步找回稳定节奏。"
+        else:
+            status = "稳定"
+            prompt = "当前状态整体稳定，可以继续按计划推进训练。"
+
+        return {
+            "status": status,
+            "confidence_level": confidence_level,
+            "consecutive_errors": consecutive_errors,
+            "overtime_count": overtime_count,
+            "interruption_days": interruption_days,
+            "prompt": prompt,
         }
 
     def _build_learning_plan(

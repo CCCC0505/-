@@ -1,19 +1,34 @@
 from typing import Generator
 
 from sqlalchemy import create_engine, inspect, text
-from sqlalchemy.engine import make_url
-from sqlalchemy.orm import declarative_base, sessionmaker
+try:
+    from sqlalchemy.engine import make_url
+except ImportError:  # pragma: no cover - compatibility with newer SQLAlchemy builds
+    from sqlalchemy.engine.url import make_url
+try:
+    from sqlalchemy.orm import declarative_base, sessionmaker
+except ImportError:  # pragma: no cover - compatibility with older SQLAlchemy builds
+    from sqlalchemy.ext.declarative import declarative_base
+    from sqlalchemy.orm import sessionmaker
 
 from backend.config import get_settings
 
 
 settings = get_settings()
 
+
+def create_engine_compat(database_url: str, **kwargs):
+    try:
+        return create_engine(database_url, future=True, pool_pre_ping=True, **kwargs)
+    except TypeError:
+        return create_engine(database_url, pool_pre_ping=True, **kwargs)
+
+
 engine_kwargs = {}
 if settings.database_url.startswith("sqlite"):
     engine_kwargs["connect_args"] = {"check_same_thread": False}
 
-engine = create_engine(settings.database_url, future=True, pool_pre_ping=True, **engine_kwargs)
+engine = create_engine_compat(settings.database_url, **engine_kwargs)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -32,9 +47,21 @@ def ensure_mysql_database_exists() -> None:
         return
 
     database_name = url.database
-    server_url = url.set(database="")
     charset = url.query.get("charset", "utf8mb4")
-    server_engine = create_engine(server_url, future=True, pool_pre_ping=True)
+    try:
+        server_url = url.set(database="")
+    except AttributeError:
+        auth = ""
+        if url.username:
+            auth = url.username
+            if url.password:
+                auth = f"{auth}:{url.password}"
+            auth = f"{auth}@"
+        host = url.host or "127.0.0.1"
+        port = f":{url.port}" if url.port else ""
+        query = f"?charset={charset}" if charset else ""
+        server_url = f"{url.drivername}://{auth}{host}{port}/{query}"
+    server_engine = create_engine_compat(server_url)
     try:
         with server_engine.connect() as conn:
             conn.execution_options(isolation_level="AUTOCOMMIT").execute(

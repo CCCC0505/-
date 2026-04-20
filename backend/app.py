@@ -65,7 +65,7 @@ JS_DIR = FRONTEND_DIR / "js"
 IMAGES_DIR = FRONTEND_DIR / "images"
 PAGES_DIR = FRONTEND_DIR / "pages"
 
-app = FastAPI(title="初中数学智能学习平台", version="1.0.0")
+app = FastAPI(title="初二数学个性化课后练习平台", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -134,11 +134,7 @@ DIAGNOSTIC_DEMO_ANSWERS = {
 }
 
 
-SUBJECT_CATALOG = {
-    "小学": ["语文", "数学", "英语"],
-    "初中": ["语文", "数学", "英语", "物理", "化学", "生物", "历史", "地理", "政治"],
-    "高中": ["语文", "数学", "英语", "物理", "化学", "生物", "历史", "地理", "政治"],
-}
+SUBJECT_CATALOG = ["数学", "语文", "英语", "物理", "化学", "生物", "历史", "地理", "政治"]
 
 
 @app.on_event("startup")
@@ -168,8 +164,12 @@ def _wrong_question_rows(db: Session, student_id: str) -> List[dict]:
         {
             "question_id": wrong.question_id,
             "title": question.title,
+            "stem": question.stem,
             "wrong_count": wrong.wrong_count,
             "status": wrong.status,
+            "difficulty": "easy" if question.difficulty == 1 else "medium" if question.difficulty == 2 else "hard",
+            "explanation": question.explanation,
+            "knowledge_tags": json.loads(question.knowledge_tags_json or "[]"),
             "last_wrong_at": wrong.last_wrong_at.isoformat(),
             "root_cause_summary": wrong.root_cause_summary,
             "qwen_summary": wrong.qwen_summary,
@@ -225,9 +225,8 @@ def _ensure_frontend_context_student(db: Session) -> dict:
     return _recent_students(db, limit=1)[0]
 
 
-def _subject_catalog_for_stage(school_type: str) -> List[dict]:
-    subjects = SUBJECT_CATALOG.get(school_type, SUBJECT_CATALOG["初中"])
-    return [{"name": subject, "icon": _subject_icon(subject), "available": subject == "数学"} for subject in subjects]
+def _subject_catalog_for_stage() -> List[dict]:
+    return [{"name": subject, "icon": _subject_icon(subject), "available": subject == "数学"} for subject in SUBJECT_CATALOG]
 
 
 def _subject_icon(subject: str) -> str:
@@ -247,10 +246,7 @@ def _subject_icon(subject: str) -> str:
 
 def _knowledge_points_for_subject(db: Session, subject: str) -> List[dict]:
     if subject != "数学":
-        return [
-            {"id": f"{subject}-001", "title": f"{subject}核心基础", "difficulty": "中等", "importance": "重点"},
-            {"id": f"{subject}-002", "title": f"{subject}综合应用", "difficulty": "困难", "importance": "重点"},
-        ]
+        return []
 
     tags = []
     rows = db.query(QuestionBank).filter(QuestionBank.grade == "grade_8").all()
@@ -260,7 +256,7 @@ def _knowledge_points_for_subject(db: Session, subject: str) -> List[dict]:
     for tag in tags:
         if tag not in unique_tags:
             unique_tags.append(tag)
-    return [
+    points = [
         {
             "id": f"math-{idx+1:03d}",
             "title": tag,
@@ -269,9 +265,44 @@ def _knowledge_points_for_subject(db: Session, subject: str) -> List[dict]:
         }
         for idx, tag in enumerate(unique_tags[:12])
     ]
+    if points:
+        return points
+    return [
+        {"id": "math-001", "title": "一次函数", "difficulty": "基础", "importance": "重点"},
+        {"id": "math-002", "title": "平行四边形", "difficulty": "中等", "importance": "重点"},
+        {"id": "math-003", "title": "数据分析", "difficulty": "基础", "importance": "基础"},
+    ]
 
 
 def _knowledge_detail(db: Session, subject: str, knowledge: str) -> dict:
+    if subject != "数学":
+        locked_knowledge = knowledge or f"{subject}知识点"
+        return {
+            "subject_overview": "当前版本聚焦初二数学样例题库与画像训练闭环，其他学科详情后续开放。",
+            "knowledge": locked_knowledge,
+            "difficulty": "后续开放",
+            "importance": "后续开放",
+            "frequency": "后续开放",
+            "concept_explanation": f"{subject}知识点内容后续开放。",
+            "formula_derivation": "当前页面不再提供多学科通用伪造内容。",
+            "application_scenarios": "请返回学科入口查看当前开放范围。",
+            "examples": [],
+            "exercises": [],
+            "support_resources": [
+                {
+                    "title": "返回学科入口",
+                    "description": "当前仅开放初二数学样例内容，可从学科入口继续查看数学知识点。",
+                    "tag": "后续开放",
+                    "href": "subject.html",
+                }
+            ],
+            "ai_recommendation": f"{subject}内容后续开放，建议先体验初二数学样例题库。",
+            "ai_recommend_cards": [
+                {"title": "当前开放范围", "description": "仅开放初二数学样例题库与画像训练闭环。"},
+                {"title": "扩展方向", "description": "教师端、家长端、多学科、多年级为后续扩展。"},
+            ],
+        }
+
     question_rows = db.query(QuestionBank).filter(QuestionBank.grade == "grade_8", QuestionBank.stage == "practice").all()
     matched = [
         row for row in question_rows
@@ -299,31 +330,32 @@ def _knowledge_detail(db: Session, subject: str, knowledge: str) -> dict:
         }
         for row in matched[:3]
     ]
-    videos = [
+    support_resources = [
         {
-            "title": f"{knowledge}基础讲解",
-            "description": f"帮助学生理解“{knowledge}”的核心概念与应用方式。",
-            "duration": "15:00",
-            "views": "平台推荐",
+            "title": f"{knowledge}知识点梳理",
+            "description": "先看概念与关键方法，再进入对应练习。",
+            "tag": "学习建议",
+            "href": "",
         },
         {
-            "title": f"{knowledge}进阶题型",
-            "description": f"围绕“{knowledge}”常见综合题型展开拆解。",
-            "duration": "20:00",
-            "views": "平台推荐",
+            "title": "进入该知识点练习",
+            "description": "完成当前知识点的课后练习，查看画像反馈变化。",
+            "tag": "练习入口",
+            "href": "",
         },
     ]
     return {
+        "subject_overview": "围绕当前样例题库提供概念说明、例题讲解与练习入口。",
         "knowledge": knowledge,
         "difficulty": "中等",
         "importance": "重点",
-        "frequency": "高频考点" if subject == "数学" else "核心知识点",
-        "concept_explanation": f"“{knowledge}”是{subject}中的关键知识点，系统会围绕概念理解、基础运算和综合应用来构建训练。",
-        "formula_derivation": f"对于“{knowledge}”，平台会优先强调概念来源、推导逻辑和易错条件，帮助学生不止会做题，还能理解为什么这样做。",
-        "application_scenarios": f"“{knowledge}”常见于课堂例题、综合练习和考试情境中，适合通过多轮训练逐步稳定掌握。",
+        "frequency": "当前样例重点",
+        "concept_explanation": f"“{knowledge}”是当前初二数学样例题库中的重点知识点，页面会优先帮助你看清概念、图像或性质之间的关系。",
+        "formula_derivation": f"围绕“{knowledge}”，建议先掌握定义和关键条件，再通过典型例题熟悉常见解法与易错点。",
+        "application_scenarios": f"完成“{knowledge}”的概念理解后，可以直接进入该知识点练习，在题目中巩固方法并观察画像反馈。",
         "examples": examples,
         "exercises": exercises,
-        "videos": videos,
+        "support_resources": support_resources,
         "ai_recommendation": f"根据当前题库与学生常见薄弱点，建议优先从“{knowledge}”的基础应用题开始，再逐步过渡到综合题。",
         "ai_recommend_cards": [
             {"title": "优先练基础题", "description": f"先建立对“{knowledge}”的稳定理解。"},
@@ -620,12 +652,14 @@ def ai_hotspot_questions(payload: dict, db: Session = Depends(get_db)):
 
 @app.get("/api/ui/subjects")
 def ui_subjects(school_type: str = "初中"):
-    return {"school_type": school_type, "subjects": _subject_catalog_for_stage(school_type)}
+    return {"school_type": "初中", "subjects": _subject_catalog_for_stage()}
 
 
 @app.get("/api/ui/knowledge-points")
 def ui_knowledge_points(subject: str = "数学", db: Session = Depends(get_db)):
-    return {"subject": subject, "knowledge_points": _knowledge_points_for_subject(db, subject)}
+    points = _knowledge_points_for_subject(db, subject)
+    message = "" if subject == "数学" else f"{subject}知识点后续开放"
+    return {"subject": subject, "knowledge_points": points, "message": message}
 
 
 @app.get("/api/ui/knowledge-detail")
@@ -833,6 +867,8 @@ def generate_recommendations(payload: RecommendationRequest, db: Session = Depen
         training_mode_label=response_payload["training_mode_label"],
         batch_goal=response_payload["batch_goal"],
         batch_tags=response_payload["batch_tags"],
+        fusion_formula=response_payload["fusion_formula"],
+        overall_reason_template=response_payload["overall_reason_template"],
         difficulty_distribution=response_payload["difficulty_distribution"],
         type_distribution=response_payload["type_distribution"],
         knowledge_distribution=response_payload["knowledge_distribution"],

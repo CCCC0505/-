@@ -133,6 +133,7 @@ class PracticeService:
                 status="open",
                 root_cause_summary="；".join(ai_output.get("mistake_analysis", [])[:2]),
                 qwen_summary=ai_output["feedback_summary"],
+                last_wrong_at=datetime.utcnow(),
             )
             self.db.add(record)
         else:
@@ -140,6 +141,7 @@ class PracticeService:
             record.status = "open"
             record.root_cause_summary = "；".join(ai_output.get("mistake_analysis", [])[:2]) or record.root_cause_summary
             record.qwen_summary = ai_output["feedback_summary"]
+            record.last_wrong_at = datetime.utcnow()
 
     def _dimension_deltas(self, previous_snapshot, new_snapshot):
         previous_map = {item["dimension_code"]: float(item["score"]) for item in previous_snapshot["dimensions"]}

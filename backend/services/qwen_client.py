@@ -227,6 +227,9 @@ class QwenClient:
                 "title": item["title"],
                 "recommendation_type": item["recommendation_type"],
                 "rule_reason": item["rule_reason"],
+                "priority": item.get("priority"),
+                "recommendation_driver": item.get("recommendation_driver"),
+                "recommendation_template": item.get("recommendation_template"),
             }
             for item in recommendation_items
         ]

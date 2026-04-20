@@ -192,6 +192,13 @@ class RecommendationItemResponse(BaseModel):
     recommendation_type: str
     rule_reason: str
     ai_reason: str
+    priority: float
+    long_term_mastery: float
+    long_term_weakness: float
+    forgetting_risk: float
+    recent_error_volatility: float
+    recommendation_driver: str
+    recommendation_template: str
     completed: bool = False
     last_result: Optional[bool] = None
     last_feedback_summary: Optional[str] = None
@@ -223,6 +230,8 @@ class RecommendationSummaryResponse(BaseModel):
     training_mode_label: str
     batch_goal: str
     batch_tags: List[str]
+    fusion_formula: str
+    overall_reason_template: str
     difficulty_distribution: List[DifficultyDistributionResponse]
     type_distribution: List[NamedDistributionResponse]
     knowledge_distribution: List[NamedDistributionResponse]
@@ -239,6 +248,8 @@ class RecommendationResponse(BaseModel):
     training_mode_label: str
     batch_goal: str
     batch_tags: List[str]
+    fusion_formula: str
+    overall_reason_template: str
     difficulty_distribution: List[DifficultyDistributionResponse]
     type_distribution: List[NamedDistributionResponse]
     knowledge_distribution: List[NamedDistributionResponse]
@@ -283,8 +294,12 @@ class PracticeAnswerResponse(BaseModel):
 class WrongQuestionResponse(BaseModel):
     question_id: str
     title: str
+    stem: str
     wrong_count: int
     status: str
+    difficulty: str
+    explanation: str
+    knowledge_tags: List[str] = Field(default_factory=list)
     last_wrong_at: str
     root_cause_summary: str
     qwen_summary: str
