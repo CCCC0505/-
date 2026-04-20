@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI学习伙伴 - 个性化学习助手</title>
+    <title>首页 - 初二数学个性化课后练习平台</title>
     <link rel="stylesheet" href="css/shouye.css?v=20260322-homefix-1">
-    <!-- 添加谷歌字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- 背景装饰元素 -->
@@ -25,8 +23,8 @@
                     <div class="circle"></div>
                 </div>
                 <div class="logo-text">
-                    <h3>AI学习伙伴</h3>
-                    <p>个性化学习助手</p>
+                    <h3>初二数学个性化课后练习平台</h3>
+                    <p>基于诊断画像的课后练习 MVP</p>
                 </div>
             </div>
 
@@ -45,7 +43,7 @@
                 </a>
                 <a href="pages/analysis.html" class="nav-item">
                     <span class="nav-icon analysis-icon"></span>
-                    <span>学习分析</span>
+                    <span>学情分析</span>
                 </a>
                 <a href="pages/notebook.html" class="nav-item">
                     <span class="nav-icon notebook-icon"></span>
@@ -91,116 +89,126 @@
         <!-- 主内容区 -->
         <div class="main-content">
             <div class="welcome-section">
-                <h1>欢迎使用AI学习伙伴！</h1>
-                <p class="welcome-subtitle">你的智能学习旅程从这里开始</p>
+                <h1>欢迎进入初二数学个性化练习平台</h1>
+                <p class="welcome-subtitle">先建立画像，再进行个性化训练</p>
+                <p>首页聚焦三件事：建立画像、进入练习、查看学情分析。</p>
             </div>
 
             <!-- 学习模式卡片 -->
             <div class="learning-cards">
                 <div class="card card-purple">
                     <div class="card-icon robot-icon"></div>
-                    <h3>智能出题</h3>
-                    <p>基于你的学习认知智能分析，量身定制专属题型，每一题都直击你的知识盲点，让学习效率提升300%</p>
-                    <button class="card-btn">开始体验</button>
+                    <h3>画像冷启动</h3>
+                    <p>通过问卷与诊断题建立初二数学画像，作为后续训练与分析的起点。</p>
+                    <button class="card-btn">开始画像</button>
                 </div>
 
                 <div class="card card-blue">
                     <div class="card-icon hat-icon"></div>
-                    <h3>陪伴式学习</h3>
-                    <p>24小时随时在线的AI导师，你解答一切疑问你的学习问题，解答疑惑，让独自学习不再孤单</p>
-                    <button class="card-btn">开始体验</button>
+                    <h3>个性化训练</h3>
+                    <p>根据画像推荐练习任务，优先补弱，再做巩固与提升。</p>
+                    <button class="card-btn">进入训练</button>
                 </div>
 
                 <div class="card card-orange">
                     <div class="card-icon game-icon"></div>
-                    <h3>游戏化学习</h3>
-                    <p>寓教于乐的知识点直观互动的游戏体验，通过闯关，奖励和积分机制，激发学习动力，让你爱上学习的每一刻</p>
-                    <button class="card-btn">开始体验</button>
+                    <h3>知识点学习</h3>
+                    <p>查看当前开放的数学知识点、例题讲解与对应练习入口。</p>
+                    <button class="card-btn">进入学习</button>
                 </div>
 
                 <div class="card card-green">
                     <div class="card-icon bulb-icon"></div>
-                    <h3>多角度思考</h3>
-                    <p>打破传统"唯一标准答案"的束缚，鼓励多种思维角度和创新方法，培养你的发散思维能力，成就未来创新人才</p>
-                    <button class="card-btn">开始体验</button>
+                    <h3>学情分析</h3>
+                    <p>查看画像变化、薄弱点与训练反馈，持续跟踪当前学习状态。</p>
+                    <button class="card-btn">查看分析</button>
                 </div>
             </div>
 
             <!-- 学科选择区域 -->
             <div class="subject-section">
-                <h2>今天想学习什么？</h2>
+                <h2>数学学习入口</h2>
                 
                 <div class="subject-grid">
-                    <button class="subject-btn chinese">
+                    <button class="subject-btn chinese is-locked" type="button" data-subject="语文" data-available="false">
                         <span class="subject-icon"></span>
-                        <span>语文</span>
+                        <span class="subject-name">语文</span>
+                        <span class="subject-badge">后续开放</span>
                     </button>
                     
-                    <button class="subject-btn math">
+                    <button class="subject-btn math" type="button" data-subject="数学" data-available="true">
                         <span class="subject-icon"></span>
-                        <span>数学</span>
+                        <span class="subject-name">数学</span>
+                        <span class="subject-badge available">当前开放</span>
                     </button>
                     
-                    <button class="subject-btn english">
+                    <button class="subject-btn english is-locked" type="button" data-subject="英语" data-available="false">
                         <span class="subject-icon"></span>
-                        <span>英语</span>
+                        <span class="subject-name">英语</span>
+                        <span class="subject-badge">后续开放</span>
                     </button>
                     
-                    <button class="subject-btn physics">
+                    <button class="subject-btn physics is-locked" type="button" data-subject="物理" data-available="false">
                         <span class="subject-icon"></span>
-                        <span>物理</span>
+                        <span class="subject-name">物理</span>
+                        <span class="subject-badge">后续开放</span>
                     </button>
                     
-                    <button class="subject-btn chemistry">
+                    <button class="subject-btn chemistry is-locked" type="button" data-subject="化学" data-available="false">
                         <span class="subject-icon"></span>
-                        <span>化学</span>
+                        <span class="subject-name">化学</span>
+                        <span class="subject-badge">后续开放</span>
                     </button>
                     
-                    <button class="subject-btn biology">
+                    <button class="subject-btn biology is-locked" type="button" data-subject="生物" data-available="false">
                         <span class="subject-icon"></span>
-                        <span>生物</span>
+                        <span class="subject-name">生物</span>
+                        <span class="subject-badge">后续开放</span>
                     </button>
                     
-                    <button class="subject-btn geography">
+                    <button class="subject-btn geography is-locked" type="button" data-subject="地理" data-available="false">
                         <span class="subject-icon"></span>
-                        <span>地理</span>
+                        <span class="subject-name">地理</span>
+                        <span class="subject-badge">后续开放</span>
                     </button>
                     
-                    <button class="subject-btn politics">
+                    <button class="subject-btn politics is-locked" type="button" data-subject="政治" data-available="false">
                         <span class="subject-icon"></span>
-                        <span>政治</span>
+                        <span class="subject-name">政治</span>
+                        <span class="subject-badge">后续开放</span>
                     </button>
                     
-                    <button class="subject-btn history">
+                    <button class="subject-btn history is-locked" type="button" data-subject="历史" data-available="false">
                         <span class="subject-icon"></span>
-                        <span>历史</span>
+                        <span class="subject-name">历史</span>
+                        <span class="subject-badge">后续开放</span>
                     </button>
                 </div>
             </div>
             
             <!-- 学习统计卡片 -->
             <div class="stats-section">
-                <h2>你的学习进度</h2>
+                <h2>当前学习概览</h2>
                 <div class="stats-cards">
                     <div class="stats-card">
                         <div class="stats-icon completed-icon"></div>
                         <div class="stats-info">
-                            <h4>已完成课程</h4>
-                            <p class="stats-number">24</p>
+                            <h4>已掌握知识点</h4>
+                            <p class="stats-number">0</p>
                         </div>
                     </div>
                     <div class="stats-card">
                         <div class="stats-icon streak-icon"></div>
                         <div class="stats-info">
                             <h4>连续学习天数</h4>
-                            <p class="stats-number">7</p>
+                            <p class="stats-number">0</p>
                         </div>
                     </div>
                     <div class="stats-card">
                         <div class="stats-icon time-icon"></div>
                         <div class="stats-info">
-                            <h4>本周学习时长</h4>
-                            <p class="stats-number">12<span class="stats-unit">小时</span></p>
+                            <h4>累计学习时长</h4>
+                            <p class="stats-number">0<span class="stats-unit">小时</span></p>
                         </div>
                     </div>
                 </div>

@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>学科资料 - AI学习伙伴</title>
+    <title>初中数学学习入口 - 初二数学个性化课后练习平台</title>
     <link rel="stylesheet" href="../css/shouye.css?v=20260322-homefix-1">
     <link rel="stylesheet" href="../css/subject.css?v=20260322-homefix-1">
-    <!-- 添加谷歌字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- 添加动画库 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         :root {
             --primary-color: #7C4DFF;
@@ -83,8 +79,8 @@
                     <div class="circle"></div>
                 </div>
                 <div class="logo-text">
-                    <h3>AI学习伙伴</h3>
-                    <p>个性化学习助手</p>
+                    <h3>初二数学个性化课后练习平台</h3>
+                    <p>基于诊断画像的课后练习 MVP</p>
                 </div>
             </div>
 
@@ -103,7 +99,7 @@
                 </a>
                 <a href="analysis.html" class="nav-item">
                     <span class="nav-icon analysis-icon"></span>
-                    <span>学习分析</span>
+                    <span>学情分析</span>
                 </a>
                 <a href="notebook.html" class="nav-item">
                     <span class="nav-icon notebook-icon"></span>
@@ -151,98 +147,36 @@
             <div class="subject-page-container">
                 <!-- 学科选择标题区 -->
                 <div class="subject-page-header">
-                    <h1 class="title-text">学科资料中心</h1>
-                    <p class="subject-page-intro">选择你需要学习的科目，探索个性化的学习内容和资源，开启智能学习之旅</p>
+                    <h1 class="title-text">初中数学学习入口</h1>
+                    <p class="subject-page-intro">当前版本聚焦初二数学，初一与初三保留扩展入口。</p>
                 </div>
 
                 <!-- 学科级别选择标签页 -->
                 <div class="subject-tabs animate__animated animate__fadeIn animate__delay-1s">
-                    <button class="tab-btn active">全部</button>
-                    <button class="tab-btn">小学</button>
-                    <button class="tab-btn">初中</button>
-                    <button class="tab-btn">高中</button>
-                    <button class="tab-btn">大学</button>
-                    <div class="tab-indicator"></div>
+                    <button class="tab-btn active" type="button">初中</button>
                 </div>
 
                 <!-- 主要内容区 -->
                 <div class="subject-content animate__animated animate__fadeIn animate__delay-2s">
                     <!-- 左侧年级导航 -->
                     <div class="grade-nav">
-                        <!-- 小学导航 -->
                         <div class="grade-category">
                             <div class="grade-header">
                                 <span class="school-icon"></span>
-                                <span>小学</span>
+                                <span>年级选择</span>
                             </div>
                             <div class="grade-list">
-                                <a href="#" class="grade-item active">
-                                    <span class="grade-icon"></span>
-                                    <span>一年级</span>
-                                </a>
-                                <a href="#" class="grade-item">
-                                    <span class="grade-icon"></span>
-                                    <span>二年级</span>
-                                </a>
-                                <a href="#" class="grade-item">
-                                    <span class="grade-icon"></span>
-                                    <span>三年级</span>
-                                </a>
-                                <a href="#" class="grade-item">
-                                    <span class="grade-icon"></span>
-                                    <span>四年级</span>
-                                </a>
-                                <a href="#" class="grade-item">
-                                    <span class="grade-icon"></span>
-                                    <span>五年级</span>
-                                </a>
-                                <a href="#" class="grade-item">
-                                    <span class="grade-icon"></span>
-                                    <span>六年级</span>
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <!-- 初中导航 -->
-                        <div class="grade-category">
-                            <div class="grade-header">
-                                <span class="school-icon"></span>
-                                <span>初中</span>
-                            </div>
-                            <div class="grade-list">
-                                <a href="#" class="grade-item">
+                                <a href="subject.html?grade=初一" class="grade-item" data-grade="初一">
                                     <span class="grade-icon"></span>
                                     <span>初一</span>
                                 </a>
-                                <a href="#" class="grade-item">
+                                <a href="subject.html?grade=初二" class="grade-item active" data-grade="初二">
                                     <span class="grade-icon"></span>
                                     <span>初二</span>
                                 </a>
-                                <a href="#" class="grade-item">
+                                <a href="subject.html?grade=初三" class="grade-item" data-grade="初三">
                                     <span class="grade-icon"></span>
                                     <span>初三</span>
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <!-- 高中导航 -->
-                        <div class="grade-category">
-                            <div class="grade-header">
-                                <span class="school-icon"></span>
-                                <span>高中</span>
-                            </div>
-                            <div class="grade-list">
-                                <a href="#" class="grade-item">
-                                    <span class="grade-icon"></span>
-                                    <span>高一</span>
-                                </a>
-                                <a href="#" class="grade-item">
-                                    <span class="grade-icon"></span>
-                                    <span>高二</span>
-                                </a>
-                                <a href="#" class="grade-item">
-                                    <span class="grade-icon"></span>
-                                    <span>高三</span>
                                 </a>
                             </div>
                         </div>
@@ -250,16 +184,8 @@
 
                     <!-- 右侧学科列表 -->
                     <div class="subject-list-container">
-                        <h2 class="subject-list-title">小学一年级 - 学科列表</h2>
-                        
-                        <div class="subject-filter">
-                            <input type="text" placeholder="搜索学科..." class="subject-search">
-                            <div class="subject-sort">
-                                <button class="sort-btn active">默认排序</button>
-                                <button class="sort-btn">按名称</button>
-                                <button class="sort-btn">按热度</button>
-                            </div>
-                        </div>
+                        <h2 class="subject-list-title">初二学科入口</h2>
+                        <p class="subject-entry-note">只展示初中学科卡片，是否可进入仅由接口中的 <code>available</code> 字段决定。</p>
                         
                         <div class="subject-list">
                             <!-- 学科列表将由JavaScript动态加载 -->
@@ -272,9 +198,7 @@
     </div>
 
     <script src="../js/shouye.js?v=20260322-homefix-1"></script>
-    <script src="../js/subject.js?v=20260322-homefix-1"></script>
-    <!-- 修复脚本 -->
-    <script src="../js/subject-fix.js?v=20260322-homefix-1"></script>
+    <script src="../js/subject.js?v=20260418-grade8-focus-1"></script>
     <script src="../js/ai-service.js?v=20260322-homefix-1"></script>
     <!-- AI助手修复脚本 -->
     <script src="../js/ai-service-fix.js?v=20260322-homefix-1"></script>

@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>学习分析 - AI学习伙伴</title>
+    <title>学情分析 - 初二数学个性化课后练习平台</title>
     <link rel="stylesheet" href="../css/shouye.css?v=20260322-homefix-1">
     <link rel="stylesheet" href="../css/analysis.css?v=20260322-homefix-1">
     <link rel="stylesheet" href="../css/subject-icons.css?v=20260322-homefix-1">
-    <!-- 添加谷歌字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- 添加动画库 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <!-- 添加图表库 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -32,8 +28,8 @@
                     <div class="circle"></div>
                 </div>
                 <div class="logo-text">
-                    <h3>AI学习伙伴</h3>
-                    <p>个性化学习助手</p>
+                    <h3>初二数学个性化课后练习平台</h3>
+                    <p>基于诊断画像的课后练习 MVP</p>
                 </div>
             </div>
 
@@ -52,7 +48,7 @@
                 </a>
                 <a href="analysis.html" class="nav-item active">
                     <span class="nav-icon analysis-icon"></span>
-                    <span>学习分析</span>
+                    <span>学情分析</span>
                 </a>
                 <a href="notebook.html" class="nav-item">
                     <span class="nav-icon notebook-icon"></span>
@@ -69,7 +65,7 @@
                     <img src="../images/生成卡通形象.png" alt="AI助手头像">
                 </div>
                 <div class="chat-bubble">
-                    <p>要查看学习分析报告吗？</p>
+                    <p>要查看学情分析报告吗？</p>
                     <p>我可以为你提供学习建议</p>
                 </div>
             </div>
@@ -99,8 +95,8 @@
             <div class="analysis-container">
                 <!-- 标题区域 -->
                 <div class="analysis-header">
-                    <h1>学习情况分析</h1>
-                    <p class="analysis-description">基于AI的学习数据分析，帮助你了解学习进展和提升空间</p>
+                    <h1>学生成长画像分析</h1>
+                    <p class="analysis-description">基于诊断、练习与知识点证据的规则建模 + AI解释</p>
                 </div>
 
                 <!-- 学科选择和时间范围筛选 -->
@@ -108,10 +104,8 @@
                     <div class="filter-group">
                         <label for="subject-select">学科</label>
                         <select id="subject-select">
-                            <option value="all">全部学科</option>
-                            <option value="physics" selected>物理</option>
-                            <option value="math">数学</option>
-                            <option value="chemistry">化学</option>
+                            <option value="math" selected>初二数学</option>
+                            <option value="portrait">成长画像</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -285,63 +279,85 @@
                         <div class="weakness-item">
                             <div class="weakness-header">
                                 <div class="weakness-name">
-                                    <h4>牛顿第三定律</h4>
-                                    <span class="weakness-subject">物理</span>
+                                    <h4>一次函数</h4>
+                                    <span class="weakness-subject">数学</span>
                                 </div>
                                 <div class="weakness-stats">
                                     <div class="accuracy-bar">
-                                        <div class="accuracy-fill" style="width: 35%;">35%</div>
+                                        <div class="accuracy-fill" style="width: 58%;">58%</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="weakness-detail">
-                                <p>在相关习题中，你经常混淆作用力与反作用力的特点和应用场景。</p>
+                                <p>正在根据最近一次诊断与练习记录生成薄弱知识点列表。</p>
                                 <div class="weakness-actions">
-                                    <a href="subject-1.html?subject=物理&knowledge=牛顿第三定律" class="action-link">复习知识点</a>
-                                    <a href="practice.html?subject=物理&knowledge=牛顿第三定律" class="action-link">专项练习</a>
+                                    <a href="subject-1.html?subject=数学&grade=初二&level=初中&knowledge=一次函数" class="action-link">复习知识点</a>
+                                    <a href="practice.html?subject=数学&grade=初二&level=初中&knowledge=一次函数" class="action-link">专项练习</a>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="weakness-item">
-                            <div class="weakness-header">
-                                <div class="weakness-name">
-                                    <h4>电学中的串并联电路</h4>
-                                    <span class="weakness-subject">物理</span>
-                                </div>
-                                <div class="weakness-stats">
-                                    <div class="accuracy-bar">
-                                        <div class="accuracy-fill" style="width: 42%;">42%</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="weakness-detail">
-                                <p>你在计算复杂电路的电阻、电流和电压问题上存在困难，尤其是混合电路。</p>
-                                <div class="weakness-actions">
-                                    <a href="subject-1.html?subject=物理&knowledge=串并联电路" class="action-link">复习知识点</a>
-                                    <a href="practice.html?subject=物理&knowledge=串并联电路" class="action-link">专项练习</a>
-                                </div>
+                    </div>
+                </div>
+
+                <div class="tracking-section">
+                    <div class="section-header">
+                        <h2>知识追踪与遗忘风险</h2>
+                        <p>长期模型 = 轻量 KT；短期模型 = 遗忘曲线；融合层 = 推荐优先级与解释。</p>
+                    </div>
+                    <div class="tracking-grid">
+                        <div class="tracking-card">
+                            <h3>本轮升级口径</h3>
+                            <p id="upgrade-one-liner">我们在现有画像和推荐系统上，增加了知识点长期掌握追踪与短期遗忘风险评估，并将两者融合到个性化推荐中。</p>
+                            <div id="upgrade-scope"></div>
+                        </div>
+                        <div class="tracking-card">
+                            <h3>优先复习 Top 3</h3>
+                            <div id="review-priority-list">
+                                <p>正在根据知识点练习历史计算遗忘风险...</p>
                             </div>
                         </div>
-                        
-                        <div class="weakness-item">
-                            <div class="weakness-header">
-                                <div class="weakness-name">
-                                    <h4>光的折射定律</h4>
-                                    <span class="weakness-subject">物理</span>
-                                </div>
-                                <div class="weakness-stats">
-                                    <div class="accuracy-bar">
-                                        <div class="accuracy-fill" style="width: 48%;">48%</div>
-                                    </div>
-                                </div>
+                    </div>
+                    <div class="tracking-card">
+                        <h3>知识点状态表</h3>
+                        <div id="knowledge-state-table">
+                            <p>正在汇总掌握度、趋势与关注状态...</p>
+                        </div>
+                    </div>
+                    <div class="tracking-card">
+                        <h3>学生-题目-知识点-时间-正误序列表</h3>
+                        <div id="knowledge-sequence-table">
+                            <p>正在整理最小可追踪序列...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tracking-section">
+                    <div class="section-header">
+                        <h2>长短期融合推荐机制</h2>
+                        <p>把长期掌握、短期遗忘和错误波动一起转成推荐优先级与解释。</p>
+                    </div>
+                    <div class="tracking-card">
+                        <div id="fusion-mechanism">
+                            <p>正在加载融合规则与推荐解释模板...</p>
+                        </div>
+                    </div>
+                    <div class="tracking-card">
+                        <h3>升级前后对比实验</h3>
+                        <div id="recommendation-comparison">
+                            <p>正在对比“原始规则 / 规则 + 遗忘曲线 / 规则 + 遗忘曲线 + 轻量 KT”三种推荐结果...</p>
+                        </div>
+                    </div>
+                    <div class="tracking-grid">
+                        <div class="tracking-card">
+                            <h3>1 分钟答辩讲法</h3>
+                            <div id="defense-script">
+                                <p>正在生成适合答辩的算法解释...</p>
                             </div>
-                            <div class="weakness-detail">
-                                <p>你对光从一种介质进入另一种介质时的路径变化理解不够清晰，计算能力有待提高。</p>
-                                <div class="weakness-actions">
-                                    <a href="subject-1.html?subject=物理&knowledge=光的折射" class="action-link">复习知识点</a>
-                                    <a href="practice.html?subject=物理&knowledge=光的折射" class="action-link">专项练习</a>
-                                </div>
+                        </div>
+                        <div class="tracking-card">
+                            <h3>情绪支持代理</h3>
+                            <div id="emotion-support-card">
+                                <p>正在评估当前训练状态...</p>
                             </div>
                         </div>
                     </div>
@@ -360,7 +376,7 @@
                                 <path d="M16 12H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                             </svg>
                         </div>
-                        <h2>AI个性化学习报告</h2>
+                        <h2>学生成长画像分析报告</h2>
                     </div>
                     <div class="ai-report-container">
                         <div class="ai-profile">
@@ -369,38 +385,28 @@
                             </div>
                             <div class="ai-info">
                                 <h3>你的AI学习助手</h3>
-                                <p>基于你的学习数据生成个性化报告</p>
+                                <p>基于诊断、练习与知识点证据生成结构化分析</p>
                             </div>
                         </div>
                         <div class="ai-report-content">
-                            <h3>学习情况总结</h3>
-                            <p>根据过去一个月的学习数据分析，你在物理学科上表现出稳定的进步，特别是在力学和热学部分。与上月相比，你的整体答题正确率提升了5个百分点，达到76%。</p>
+                            <h3>成长画像结论</h3>
+                            <p>正在根据诊断结果、练习表现和知识点证据生成最新画像分析。</p>
                             
-                            <h3>优势领域</h3>
-                            <p>你在以下知识点表现出色：</p>
+                            <h3>证据输入</h3>
                             <ul>
-                                <li><strong>牛顿第一、二定律</strong>：正确率达到92%，对基础力学概念掌握良好</li>
-                                <li><strong>热力学第一定律</strong>：正确率达到88%，能够灵活运用</li>
-                                <li><strong>简谐运动</strong>：正确率达到85%，对周期运动理解透彻</li>
+                                <li><strong>诊断证据</strong>：来自冷启动问卷与诊断题的初始能力画像</li>
+                                <li><strong>练习证据</strong>：来自练习批次中的作答结果、速度与错题回流</li>
+                                <li><strong>知识点证据</strong>：来自知识点掌握矩阵与认知层级诊断</li>
                             </ul>
                             
-                            <h3>待改进领域</h3>
-                            <p>建议重点关注以下知识点：</p>
-                            <ul>
-                                <li><strong>牛顿第三定律</strong>：目前正确率仅为35%，建议重新学习并多做练习</li>
-                                <li><strong>电学中的串并联电路</strong>：正确率42%，需要加强对基本原理的理解</li>
-                                <li><strong>光的折射定律</strong>：正确率48%，建议结合实例加深理解</li>
-                            </ul>
+                            <h3>规则建模</h3>
+                            <p>系统会把难度、认知层级、速度和知识点权重合并进规则模型，再由 AI 生成结构化解释。</p>
                             
-                            <h3>学习习惯分析</h3>
-                            <p>你的学习时间分布显示，晚上9点到11点是你的高效学习时段，但学习时长分布不均匀，存在突击学习的情况。建议制定更均衡的学习计划，保持每天稳定的学习时长。</p>
-                            
-                            <h3>个性化学习建议</h3>
+                            <h3>训练建议</h3>
                             <ol>
-                                <li><strong>知识点强化</strong>：针对薄弱知识点，建议采用"知识点回顾 → 例题分析 → 同类题练习 → 综合应用"的学习路径</li>
-                                <li><strong>学习计划调整</strong>：建议每天安排30-45分钟用于薄弱知识点的复习，每周进行一次系统性的知识回顾</li>
-                                <li><strong>学习方法优化</strong>：对于电学和光学内容，建议结合视频和交互式动画加深理解，而不仅仅依赖文字材料</li>
-                                <li><strong>错题复习策略</strong>：建议采用间隔重复法复习错题，而不是一次性集中复习，提高记忆效果</li>
+                                <li>先回看当前薄弱知识点的概念说明与例题讲解</li>
+                                <li>再进入当前批次训练，观察正确率和画像变化</li>
+                                <li>对错题进行二次复盘，形成“证据 -> 建模 -> 输出 -> 训练建议”闭环</li>
                             </ol>
                         </div>
                         <div class="ai-report-actions">
@@ -414,7 +420,7 @@
                                     <path d="M13 12H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                                     <path d="M13 17H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
-                                生成学习计划
+                                查看训练建议
                             </button>
                             <button id="download-report-btn" class="download-btn">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -422,7 +428,7 @@
                                     <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     <path d="M12 15V3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
-                                下载报告
+                                导出分析摘要
                             </button>
                             <button id="share-report-btn" class="share-btn">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -432,7 +438,7 @@
                                     <line x1="9" y1="10.5" x2="15" y2="6.5" stroke="currentColor" stroke-width="2"/>
                                     <line x1="9" y1="13.5" x2="15" y2="17.5" stroke="currentColor" stroke-width="2"/>
                                 </svg>
-                                分享报告
+                                复制分析摘要
                             </button>
                         </div>
                     </div>
@@ -454,233 +460,48 @@
                     </div>
                     <div class="learning-plan-container">
                         <div class="plan-header">
-                            <h3>未来两周学习安排</h3>
-                            <p>基于你的学习情况和薄弱环节，AI为你定制的学习计划</p>
+                            <h3>训练建议排布</h3>
+                            <p>点击“查看训练建议”后，会根据当前画像和训练记录生成两周学习安排。</p>
                         </div>
-                        
                         <div class="weekly-plans">
                             <div class="weekly-plan">
-                                <div class="plan-week">第一周</div>
+                                <div class="plan-week">待生成</div>
                                 <div class="daily-plans">
                                     <div class="daily-plan">
-                                        <div class="plan-day">周一</div>
+                                        <div class="plan-day">当前状态</div>
                                         <div class="plan-content">
                                             <div class="plan-task">
-                                                <span class="time">30分钟</span>
-                                                <span class="task">牛顿第三定律知识点复习</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">45分钟</span>
-                                                <span class="task">牛顿第三定律基础习题训练</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="daily-plan">
-                                        <div class="plan-day">周二</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">30分钟</span>
-                                                <span class="task">串并联电路概念复习</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">45分钟</span>
-                                                <span class="task">电路分析基础练习</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="daily-plan">
-                                        <div class="plan-day">周三</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">30分钟</span>
-                                                <span class="task">光的折射定律复习</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">45分钟</span>
-                                                <span class="task">光学问题解题技巧练习</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="daily-plan">
-                                        <div class="plan-day">周四</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">30分钟</span>
-                                                <span class="task">牛顿运动定律综合练习</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">45分钟</span>
-                                                <span class="task">力学应用题专项训练</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="daily-plan">
-                                        <div class="plan-day">周五</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">30分钟</span>
-                                                <span class="task">串并联电路进阶练习</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">45分钟</span>
-                                                <span class="task">电学综合问题训练</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="daily-plan weekend">
-                                        <div class="plan-day">周末</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">60分钟</span>
-                                                <span class="task">第一周知识点回顾与错题分析</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">90分钟</span>
-                                                <span class="task">综合测试与自我评估</span>
+                                                <span class="time">--</span>
+                                                <span class="task">等待根据真实画像、训练批次和知识点证据生成训练建议</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="weekly-plan">
-                                <div class="plan-week">第二周</div>
-                                <div class="daily-plans">
-                                    <div class="daily-plan">
-                                        <div class="plan-day">周一</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">30分钟</span>
-                                                <span class="task">光的折射进阶内容学习</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">45分钟</span>
-                                                <span class="task">光学计算题专项训练</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="daily-plan">
-                                        <div class="plan-day">周二</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">30分钟</span>
-                                                <span class="task">电磁学关联知识点学习</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">45分钟</span>
-                                                <span class="task">电磁感应问题练习</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="daily-plan">
-                                        <div class="plan-day">周三</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">30分钟</span>
-                                                <span class="task">牛顿第三定律深入理解</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">45分钟</span>
-                                                <span class="task">作用力与反作用力专题练习</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="daily-plan">
-                                        <div class="plan-day">周四</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">30分钟</span>
-                                                <span class="task">混合电路分析方法学习</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">45分钟</span>
-                                                <span class="task">复杂电路问题解题训练</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="daily-plan">
-                                        <div class="plan-day">周五</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">30分钟</span>
-                                                <span class="task">光学折射应用场景学习</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">45分钟</span>
-                                                <span class="task">光学应用题专项训练</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="daily-plan weekend">
-                                        <div class="plan-day">周末</div>
-                                        <div class="plan-content">
-                                            <div class="plan-task">
-                                                <span class="time">60分钟</span>
-                                                <span class="task">两周学习内容系统总结</span>
-                                            </div>
-                                            <div class="plan-task">
-                                                <span class="time">90分钟</span>
-                                                <span class="task">综合模拟测试与知识点查漏补缺</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="plan-actions">
-                            <button id="save-plan-btn" class="save-btn">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16L21 8V19C21 20.1046 20.1046 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M7 3V8H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                保存计划
-                            </button>
-                            <button id="adjust-plan-btn" class="adjust-btn">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 20H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M16.5 3.5C16.8978 3.10217 17.4374 2.87868 18 2.87868C18.2786 2.87868 18.5544 2.93355 18.8118 3.04015C19.0692 3.14676 19.303 3.30301 19.5 3.5C19.697 3.69699 19.8532 3.93083 19.9598 4.18821C20.0665 4.44558 20.1213 4.72142 20.1213 5C20.1213 5.27858 20.0665 5.55442 19.9598 5.81179C19.8532 6.06916 19.697 6.30301 19.5 6.5L7 19L3 20L4 16L16.5 3.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                调整计划
-                            </button>
-                            <button id="calendar-sync-btn" class="calendar-btn">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-                                    <path d="M16 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                    <path d="M8 2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                    <path d="M3 10H21" stroke="currentColor" stroke-width="2"/>
-                                    <circle cx="12" cy="15" r="2" stroke="currentColor" stroke-width="2"/>
-                                </svg>
-                                同步到日历
-                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- 学习建议和推荐资源 -->
+                <!-- 答辩亮点 -->
                 <div class="recommendations-section">
                     <div class="section-header">
-                        <h2>个性化学习建议</h2>
+                        <h2>答辩亮点</h2>
                     </div>
                     <div class="recommendations-container">
                         <div class="recommendation-cards">
                             <div class="recommendation-card">
                                 <div class="recommendation-icon resource-icon"></div>
                                 <div class="recommendation-content">
-                                    <h4>推荐学习资源</h4>
+                                    <h4>怎么建模</h4>
                                     <ul>
                                         <li>
-                                            <a href="#">《物理思维与解题方法》视频课程</a>
-                                            <span class="badge">高效</span>
+                                            诊断题、练习题、知识点证据共同进入规则模型
                                         </li>
                                         <li>
-                                            <a href="#">《电路分析入门到精通》交互式课程</a>
-                                            <span class="badge">热门</span>
+                                            难度、认知层级、速度与知识点权重共同影响画像
                                         </li>
                                         <li>
-                                            <a href="#">《光学核心概念》图解与动画</a>
-                                            <span class="badge">直观</span>
+                                            问卷特征只作为稳定性和策略的辅助因子
                                         </li>
                                     </ul>
                                 </div>
@@ -688,16 +509,16 @@
                             <div class="recommendation-card">
                                 <div class="recommendation-icon method-icon"></div>
                                 <div class="recommendation-content">
-                                    <h4>学习方法优化</h4>
+                                    <h4>怎么输出</h4>
                                     <ul>
                                         <li>
-                                            <strong>费曼学习法</strong>：尝试用自己的话解释知识点，找出理解不足之处
+                                            输出五维成长画像、知识矩阵和认知层级诊断
                                         </li>
                                         <li>
-                                            <strong>间隔重复</strong>：采用科学的间隔复习计划，提高记忆效率
+                                            生成结构化 AI 解释，而不是直接展示原始大模型文本
                                         </li>
                                         <li>
-                                            <strong>实例联系</strong>：将抽象概念与日常生活中的实例关联，加深理解
+                                            把画像结果直接转成训练重点和练习建议
                                         </li>
                                     </ul>
                                 </div>
@@ -705,16 +526,16 @@
                             <div class="recommendation-card">
                                 <div class="recommendation-icon exercise-icon"></div>
                                 <div class="recommendation-content">
-                                    <h4>推荐练习方式</h4>
+                                    <h4>参考依据</h4>
                                     <ul>
                                         <li>
-                                            <strong>渐进式难度</strong>：从基础题到中等难度再到高难度，循序渐进
+                                            参数说明、建模公式和论文依据都集中展示在本页
                                         </li>
                                         <li>
-                                            <strong>限时训练</strong>：设定答题时间限制，提高解题速度和思维敏捷度
+                                            重点体现“证据 -> 建模 -> 输出 -> 训练建议”的闭环
                                         </li>
                                         <li>
-                                            <strong>错题重做</strong>：对错题进行分类整理，定期重做，巩固薄弱点
+                                            适合作为答辩中展示系统可信度与方法论的核心页面
                                         </li>
                                     </ul>
                                 </div>

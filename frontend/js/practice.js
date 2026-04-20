@@ -9,6 +9,7 @@ const practiceState = {
     urlContext: {
         subject: '数学',
         grade: '初二',
+        level: '初中',
         knowledge: '一次函数'
     }
 };
@@ -17,9 +18,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     injectPracticeStyles();
     const params = new URLSearchParams(window.location.search);
     practiceState.urlContext.subject = params.get('subject') || '数学';
-    practiceState.urlContext.grade = params.get('grade') || '初中二年级';
+    practiceState.urlContext.grade = params.get('grade') || '初二';
+    practiceState.urlContext.level = params.get('level') || '初中';
     practiceState.urlContext.knowledge = params.get('knowledge') || '一次函数';
-    updatePageInfo(practiceState.urlContext.subject, practiceState.urlContext.grade, practiceState.urlContext.knowledge);
+    updatePageInfo(
+        practiceState.urlContext.subject,
+        practiceState.urlContext.grade,
+        practiceState.urlContext.level,
+        practiceState.urlContext.knowledge
+    );
     setupEventListeners();
     await initializePracticePage();
 });
@@ -39,15 +46,19 @@ async function initializePracticePage() {
     }
 }
 
-function updatePageInfo(subject, grade, knowledge) {
-    document.getElementById('practice-title').textContent = `${subject}练习中心`;
-    document.getElementById('practice-description').textContent = `围绕${knowledge}或你的成长画像提供训练内容`;
+function updatePageInfo(subject, grade, level, knowledge) {
+    const gradeLabel = level && !grade.startsWith(level) ? `${level}${grade}` : grade;
+    document.getElementById('practice-title').textContent = '练习中心';
+    document.getElementById('practice-description').textContent = '根据画像生成当前训练批次';
     document.getElementById('current-subject').textContent = subject;
-    document.getElementById('current-grade').textContent = grade;
+    document.getElementById('current-grade').textContent = gradeLabel;
     document.getElementById('current-knowledge').textContent = knowledge;
     const knowledgeLink = document.getElementById('knowledge-link');
     if (knowledgeLink) {
-        knowledgeLink.setAttribute('href', `subject-1.html?subject=${encodeURIComponent(subject)}&grade=${encodeURIComponent(grade)}&knowledge=${encodeURIComponent(knowledge)}`);
+        knowledgeLink.setAttribute(
+            'href',
+            `subject-1.html?subject=${encodeURIComponent(subject)}&grade=${encodeURIComponent(grade)}&level=${encodeURIComponent(level)}&knowledge=${encodeURIComponent(knowledge)}`
+        );
         knowledgeLink.textContent = knowledge;
     }
 }
@@ -106,33 +117,33 @@ function injectPersonalizedPracticePanel(errorMessage = '') {
     const aiRun = practiceState.workbench?.latest_ai_run;
     panel.innerHTML = `
         <div class="portrait-practice-main">
-            <div class="panel-tag">个性化练习</div>
+            <div class="panel-tag">当前训练批次</div>
             <h3>${latest ? latest.summary_card?.headline || latest.portrait_summary : '当前还没有真实画像'}</h3>
             <p>${latest
-                ? `这套题将根据你的成长画像进行推题。当前短板：${latest.summary_card?.weakness_highlight || '暂无'}；训练重点：${(latest.training_focus || []).slice(0, 3).join('、') || '暂无'}。`
+                ? `这批题来自最近一次成长画像、当前知识点和未完成训练记录。当前短板：${latest.summary_card?.weakness_highlight || '暂无'}；训练重点：${(latest.training_focus || []).slice(0, 3).join('、') || '暂无'}。`
                 : errorMessage || '请先在首页完成画像冷启动，个性化练习才会使用你的真实画像推题。'}</p>
             <div class="personalized-mode-group">
-                ${renderModeButton('balanced', '平衡训练')}
-                ${renderModeButton('weakness', '刷弱项')}
-                ${renderModeButton('accuracy', '稳正确率')}
+                ${renderModeButton('balanced', '均衡训练')}
+                ${renderModeButton('weakness', '补弱优先')}
+                ${renderModeButton('accuracy', '稳定正确率')}
                 ${renderModeButton('challenge', '挑战提升')}
             </div>
             <div class="type-distribution-wrap" id="type-distribution-wrap">
-                <div class="distribution-placeholder">生成题单后，这里会显示本轮题单的补弱/巩固/提升分布。</div>
+                <div class="distribution-placeholder">生成题单后，这里会显示当前批次的生成依据，以及补弱/巩固/提升分布。</div>
             </div>
         </div>
         <div class="portrait-practice-side">
             <div class="practice-mini-card">
-                <span>AI推荐状态</span>
-                <strong>${recommendation?.ai_status?.success ? 'Qwen 已解释推荐' : aiRun?.success ? 'Qwen 已参与画像' : '当前可能回退到规则'}</strong>
+                <span>AI状态</span>
+                <strong>${recommendation?.ai_status?.success ? 'AI解释' : '规则回退'}</strong>
             </div>
             <div class="practice-mini-card">
                 <span>当前模式</span>
                 <strong>${modeLabel(practiceState.trainingMode)}</strong>
             </div>
             <div class="practice-mini-card">
-                <span>AI模型</span>
-                <strong>${aiRun?.model_name || 'qwen3.5-plus'}</strong>
+                <span>批次说明</span>
+                <strong>${latest ? '画像 + 知识点证据' : '等待建立画像'}</strong>
             </div>
         </div>
     `;
@@ -178,13 +189,13 @@ function updatePersonalizedPracticePanelWithRecommendation(recommendation) {
     if (!panel) return;
     const main = panel.querySelector('.portrait-practice-main p');
     if (main) {
-        main.textContent = `当前模式：${recommendation.training_mode_label}。批次目标：${recommendation.batch_goal}。训练重点：${(recommendation.training_focus || []).slice(0, 3).join('、') || '暂无'}。`;
+        main.textContent = `${recommendation.overall_reason_template || recommendation.overall_commentary} 当前模式：${recommendation.training_mode_label}；批次目标：${recommendation.batch_goal}；训练重点：${(recommendation.training_focus || []).slice(0, 3).join('、') || '暂无'}。`;
     }
     renderTypeDistribution(recommendation.type_distribution || []);
     const cards = panel.querySelectorAll('.practice-mini-card strong');
-    if (cards[0]) cards[0].textContent = recommendation.ai_status?.success ? 'Qwen 已解释推荐' : recommendation.ai_status?.fallback_used ? '规则回退推荐' : '推荐已生成';
+    if (cards[0]) cards[0].textContent = recommendation.ai_status?.success ? 'AI解释' : '规则回退';
     if (cards[1]) cards[1].textContent = recommendation.training_mode_label;
-    if (cards[2]) cards[2].textContent = recommendation.ai_status?.model_name || 'qwen3.5-plus';
+    if (cards[2]) cards[2].textContent = `来自${(recommendation.batch_tags || []).slice(0, 2).join('、') || '画像证据'}`;
 }
 
 function renderTypeDistribution(typeDistribution) {
@@ -201,7 +212,7 @@ function renderTypeDistribution(typeDistribution) {
     }
     container.innerHTML = `
         <div class="distribution-header">
-            <span>本轮题单结构</span>
+            <span>本轮批次结构</span>
             <strong>${total} 题</strong>
         </div>
         <div class="distribution-bar">
@@ -265,7 +276,8 @@ function renderQuestionByIndex(index) {
             <div class="question-body">
                 <p class="question-text">${question.stem}</p>
                 <div class="portrait-reason-box">
-                    <strong>画像推题理由：</strong>${question.ai_reason || question.rule_reason}
+                    <strong>画像推题理由：</strong>${question.recommendation_template || question.ai_reason || question.rule_reason}
+                    <br><span>优先级 ${Math.round(question.priority || 0)} · 长期掌握 ${question.long_term_mastery ?? '--'} · 遗忘风险 ${Math.round(question.forgetting_risk || 0)}%</span>
                 </div>
                 <div class="question-options">
                     ${(question.options || []).map((option) => `
@@ -342,7 +354,7 @@ function showAnswerFeedback(payload, currentQuestion) {
                 <circle cx="12" cy="12" r="10" fill="#4CAF50" fill-opacity="0.1" stroke="#4CAF50" stroke-width="2"/>
                 <path d="M8 12L11 15L16 9" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <h3>回答正确！画像已同步更新</h3>
+            <h3>回答正确！训练记录已同步更新</h3>
         `;
     } else {
         resultElement.classList.add('incorrect');
@@ -400,7 +412,7 @@ function showHint() {
     aiMessageElement.style.display = 'block';
     aiMessageElement.innerHTML = `
         <p><strong>画像提示：</strong></p>
-        <p>${currentQuestion?.ai_reason || currentQuestion?.rule_reason || '先回看题目中的已知条件，再判断它考查的是哪个知识点。'}</p>
+        <p>${currentQuestion?.recommendation_template || currentQuestion?.ai_reason || currentQuestion?.rule_reason || '先回看题目中的已知条件，再判断它考查的是哪个知识点。'}</p>
     `;
 }
 
@@ -429,7 +441,7 @@ function handleAiHelp(event) {
 async function loadHotspotQuestions(isRefresh = false, count = 3) {
     const hotspotSubtitle = document.querySelector('.hotspot-subtitle p');
     if (hotspotSubtitle) {
-        hotspotSubtitle.textContent = isRefresh ? '正在刷新 AI 热点题目...' : '正在加载 AI 热点题目...';
+        hotspotSubtitle.textContent = isRefresh ? '正在刷新拓展练习...' : '正在加载拓展练习...';
     }
     const context = currentHotspotContext();
     try {
@@ -441,13 +453,13 @@ async function loadHotspotQuestions(isRefresh = false, count = 3) {
         );
         renderHotspotQuestions(result.questions || []);
         if (hotspotSubtitle) {
-            hotspotSubtitle.textContent = result.aiStatus?.message || '已生成热点题目';
+            hotspotSubtitle.textContent = result.aiStatus?.message || '已生成拓展练习';
         }
     } catch (error) {
-        console.error('加载热点题目失败:', error);
+        console.error('加载拓展练习失败:', error);
         renderHotspotQuestions([]);
         if (hotspotSubtitle) {
-            hotspotSubtitle.textContent = '热点题目加载失败';
+            hotspotSubtitle.textContent = '拓展练习加载失败';
         }
     }
 }
@@ -457,7 +469,7 @@ function currentHotspotContext() {
     if (currentQuestion) {
         return {
             subject: '数学',
-            grade: '初中二年级',
+            grade: '初二',
             knowledge: (currentQuestion.knowledge_tags || [practiceState.urlContext.knowledge])[0] || practiceState.urlContext.knowledge
         };
     }
@@ -471,7 +483,7 @@ function renderHotspotQuestions(questions) {
         hotspotContainer.innerHTML = `
             <div class="hotspot-item">
                 <div class="hotspot-item-content">
-                    <p>当前暂无热点题目，稍后可点击刷新重新生成。</p>
+                    <p>当前暂无拓展练习，稍后可点击刷新重新生成。</p>
                 </div>
             </div>
         `;
@@ -480,7 +492,7 @@ function renderHotspotQuestions(questions) {
     hotspotContainer.innerHTML = questions.map((question) => `
         <div class="hotspot-item">
             <div class="hotspot-item-header">
-                <div class="hotspot-badge">${question.badge}</div>
+                <div class="hotspot-badge">拓展题</div>
                 <div class="hotspot-difficulty">${question.difficulty}</div>
             </div>
             <div class="hotspot-item-content">
@@ -500,7 +512,7 @@ function handleHotspotSolve(questionContent) {
     aiMessage.style.display = 'block';
     aiMessage.innerHTML = `
         <div class="ai-thinking"><span></span><span></span><span></span></div>
-        <p>正在分析热点题目...</p>
+        <p>正在分析拓展练习...</p>
     `;
     const prompt = `请详细分析并解答这道题目：${questionContent}
 
@@ -512,17 +524,17 @@ function handleHotspotSolve(questionContent) {
 5. 与当前知识点的联系`;
 
     window.aiService.sendMessage(prompt, (_, fullText) => {
-        aiMessage.innerHTML = `<p><strong>AI热点题分析：</strong></p><p>${fullText.replace(/\n/g, '<br>')}</p>`;
+        aiMessage.innerHTML = `<p><strong>AI拓展题分析：</strong></p><p>${fullText.replace(/\n/g, '<br>')}</p>`;
     }).catch(() => {
-        aiMessage.innerHTML = '<p>很抱歉，热点题分析生成失败，请稍后再试。</p>';
+        aiMessage.innerHTML = '<p>很抱歉，拓展练习分析生成失败，请稍后再试。</p>';
     });
 }
 
 function modeLabel(mode) {
-    if (mode === 'weakness') return '刷弱项';
+    if (mode === 'weakness') return '补弱优先';
     if (mode === 'accuracy') return '稳定正确率';
     if (mode === 'challenge') return '挑战提升';
-    return '平衡训练';
+    return '均衡训练';
 }
 
 function showPageNotification(message, type = 'info') {

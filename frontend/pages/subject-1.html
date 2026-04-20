@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>学科知识点 - AI学习伙伴</title>
+    <title>数学知识点 - 初二数学个性化课后练习平台</title>
     <link rel="stylesheet" href="../css/shouye.css?v=20260322-homefix-1">
     <link rel="stylesheet" href="../css/subject-1.css?v=20260322-homefix-1">
     <link rel="stylesheet" href="../css/subject-icons.css?v=20260322-homefix-1">
-    <!-- 添加谷歌字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- 添加动画库 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body>
     <!-- 背景装饰元素 -->
@@ -30,8 +26,8 @@
                     <div class="circle"></div>
                 </div>
                 <div class="logo-text">
-                    <h3>AI学习伙伴</h3>
-                    <p>个性化学习助手</p>
+                    <h3>初二数学个性化课后练习平台</h3>
+                    <p>基于诊断画像的课后练习 MVP</p>
                 </div>
             </div>
 
@@ -44,15 +40,15 @@
                     <span class="nav-icon course-icon"></span>
                     <span>学科资料</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="practice.html" class="nav-item">
                     <span class="nav-icon practice-icon"></span>
                     <span>练习中心</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="analysis.html" class="nav-item">
                     <span class="nav-icon analysis-icon"></span>
-                    <span>学习分析</span>
+                    <span>学情分析</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="notebook.html" class="nav-item">
                     <span class="nav-icon notebook-icon"></span>
                     <span>错题本</span>
                 </a>
@@ -98,26 +94,28 @@
             <div class="subject-detail-container">
                 <!-- 顶部导航路径 -->
                 <div class="breadcrumb">
+                    <a href="../index.html">首页</a>
+                    <span class="separator">></span>
                     <a href="subject.html">学科资料</a>
                     <span class="separator">></span>
-                    <span id="current-subject">物理</span>
+                    <span id="current-subject">数学知识点</span>
                     <span class="separator">></span>
-                    <span id="current-grade">初中二年级</span>
+                    <span id="current-grade">初中初二</span>
                 </div>
 
                 <!-- 学科标题 -->
                 <div class="subject-detail-header">
-                    <div class="subject-icon-large physics-icon">
+                    <div class="subject-icon-large math-icon" id="subject-icon-large">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2"/>
-                            <path d="M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22" stroke="currentColor" stroke-width="2"/>
-                            <path d="M12 2C9.49872 4.73835 8.07725 8.29203 8 12C8.07725 15.708 9.49872 19.2616 12 22" stroke="currentColor" stroke-width="2"/>
-                            <path d="M2 12H22" stroke="currentColor" stroke-width="2"/>
+                            <path d="M7 7L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M17 7L7 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M12 3V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+                            <path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
                         </svg>
                     </div>
                     <div class="subject-title">
-                        <h1 id="subject-name">物理</h1>
-                        <p class="subject-description">探索物理世界的奥秘，从基础概念到实际应用</p>
+                        <h1 id="subject-name">数学知识点</h1>
+                        <p class="subject-description" id="subject-description">围绕当前样例题库提供概念说明、例题讲解与练习入口。</p>
                     </div>
                     <div class="subject-actions">
                         <button class="action-btn favorite">
@@ -167,7 +165,7 @@
                     <!-- 右侧知识点详情 -->
                     <div class="knowledge-detail">
                         <div class="knowledge-detail-header">
-                            <h2 id="current-knowledge">加载中...</h2>
+                            <h2 id="current-knowledge">一次函数</h2>
                             <div class="knowledge-meta">
                                 <span class="difficulty">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -194,11 +192,11 @@
                                     <span id="knowledge-frequency">高频考点</span>
                                 </span>
                                 <!-- 添加开始练习按钮 -->
-                                <a href="#" id="start-practice-btn" class="start-practice-btn">
+                                <a href="practice.html?subject=数学&grade=初二&level=初中&knowledge=一次函数" id="start-practice-btn" class="start-practice-btn">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M5 3L19 12L5 21V3Z" fill="currentColor"/>
                                     </svg>
-                                    开始练习
+                                    <span id="start-practice-text">进入该知识点练习</span>
                                 </a>
                             </div>
                         </div>
@@ -209,15 +207,15 @@
                         </div>
                         
                         <div class="knowledge-content" id="knowledge-content">
-                            <!-- 知识点内容将从数据库动态加载 -->
+                            <p>围绕当前样例题库提供概念说明、例题讲解与练习入口。</p>
                         </div>
 
                         <!-- 标签切换 -->
                         <div class="content-tabs">
-                            <button class="tab-button active" data-tab="theory">基础理论</button>
+                            <button class="tab-button active" data-tab="theory">概念说明</button>
                             <button class="tab-button" data-tab="examples">例题讲解</button>
-                            <button class="tab-button" data-tab="exercises">习题练习</button>
-                            <button class="tab-button" data-tab="videos">视频资源</button>
+                            <button class="tab-button" data-tab="exercises">练习入口</button>
+                            <button class="tab-button" data-tab="support">学习建议</button>
                         </div>
 
                         <!-- 标签内容区 -->
@@ -225,23 +223,23 @@
                             <!-- 基础理论 -->
                             <div class="tab-content active" id="theory-content">
                                 <div class="theory-section">
-                                    <h3>概念解析</h3>
+                                    <h3>概念说明</h3>
                                     <div class="theory-block" id="concept-explanation">
-                                        <!-- 动态加载 -->
+                                        <p>围绕当前样例题库提供概念说明、例题讲解与练习入口。</p>
                                     </div>
                                 </div>
                                 
                                 <div class="theory-section">
-                                    <h3>公式推导</h3>
+                                    <h3>关键方法</h3>
                                     <div class="theory-block" id="formula-derivation">
-                                        <!-- 动态加载 -->
+                                        <p>建议先理解定义和条件，再通过例题巩固解题步骤。</p>
                                     </div>
                                 </div>
                                 
                                 <div class="theory-section">
-                                    <h3>应用场景</h3>
+                                    <h3>练习场景</h3>
                                     <div class="theory-block" id="application-scenarios">
-                                        <!-- 动态加载 -->
+                                        <p>完成概念学习后，可直接进入该知识点练习，查看画像反馈变化。</p>
                                     </div>
                                 </div>
                             </div>
@@ -249,7 +247,7 @@
                             <!-- 例题讲解 -->
                             <div class="tab-content" id="examples-content">
                                 <div class="examples-container" id="examples-list">
-                                    <!-- 动态加载 -->
+                                    <p class="no-data">正在准备当前知识点的例题讲解。</p>
                                 </div>
                             </div>
 
@@ -273,7 +271,7 @@
                                     </div>
                                 </div>
                                 <div class="exercises-container" id="exercises-list">
-                                    <!-- 动态加载 -->
+                                    <p class="no-data">选择知识点后可查看对应练习入口。</p>
                                 </div>
                                 <div class="exercise-pagination">
                                     <button id="prev-page" disabled>上一页</button>
@@ -282,10 +280,10 @@
                                 </div>
                             </div>
 
-                            <!-- 视频资源 -->
-                            <div class="tab-content" id="videos-content">
-                                <div class="videos-container" id="videos-list">
-                                    <!-- 动态加载 -->
+                            <!-- 学习建议 -->
+                            <div class="tab-content" id="support-content">
+                                <div class="videos-container" id="support-list">
+                                    <p class="no-data">当前会优先展示与该知识点相关的学习建议和练习入口。</p>
                                 </div>
                             </div>
                         </div>
@@ -299,7 +297,7 @@
                                 <h3>AI学习推荐</h3>
                             </div>
                             <div class="ai-rec-content">
-                                <p class="ai-message" id="ai-recommendation">根据你的学习数据，我推荐你重点关注"<span class="highlight">牛顿第二定律的应用</span>"部分，这是你之前的薄弱环节。</p>
+                                <p class="ai-message" id="ai-recommendation">当前样例建议先从<span class="highlight">一次函数</span>的基础概念与图像题开始，再进入对应练习。</p>
                                 <div class="ai-rec-cards" id="ai-rec-cards">
                                     <!-- 动态加载推荐卡片 -->
                                 </div>
@@ -331,79 +329,8 @@
 
     <script src="../js/shouye.js?v=20260322-homefix-1"></script>
     <script src="../js/ai-service.js?v=20260322-homefix-1"></script>
-    <script src="../js/subject-1.js?v=20260322-homefix-1"></script>
+    <script src="../js/subject-1.js?v=20260418-grade8-focus-1"></script>
     <!-- AI助手修复脚本 -->
     <script src="../js/ai-service-fix.js?v=20260322-homefix-1"></script>
-    <script>
-        // 处理图片加载失败
-        document.addEventListener('DOMContentLoaded', function() {
-            // 设置默认视频封面
-            const placeholderUrl = '../images/video-placeholder.jpg';
-            document.querySelectorAll('.video-thumbnail img').forEach(img => {
-                img.addEventListener('error', function() {
-                    this.src = placeholderUrl;
-                });
-                // 如果已经加载但是无效，也设置为默认图片
-                if (!img.complete || img.naturalHeight === 0) {
-                    img.src = placeholderUrl;
-                }
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // 获取URL参数
-            const urlParams = new URLSearchParams(window.location.search);
-            const subject = urlParams.get('subject');
-            const grade = urlParams.get('grade');
-            const level = urlParams.get('level');
-
-            // 设置页面标题和面包屑导航
-            document.getElementById('subject-name').textContent = subject;
-            document.getElementById('current-subject').textContent = subject;
-            document.getElementById('current-grade').textContent = `${level}${grade}`;
-
-            // 示例知识点数据
-            const knowledgePoints = {
-                '语文': ['汉字的起源', '诗词赏析', '作文技巧'],
-                '数学': ['加减法运算', '几何图形', '应用题解法'],
-                '英语': ['基础词汇', '语法规则', '日常对话'],
-                '物理': ['牛顿定律', '电路基础', '光学现象'],
-                '化学': ['元素周期表', '化学反应', '实验安全'],
-                '生物': ['细胞结构', '生态系统', '人体器官'],
-                '历史': ['古代文明', '历史事件', '重要人物'],
-                '地理': ['地图识别', '气候类型', '地形地貌'],
-                '政治': ['公民权利', '法律基础', '社会责任'],
-                '科学': ['自然现象', '实验方法', '科学探究'],
-                '高等数学': ['微积分基础', '线性代数', '概率统计'],
-                '大学物理': ['力学原理', '电磁学', '热力学'],
-                '大学英语': ['学术写作', '专业词汇', '英语演讲'],
-                '计算机基础': ['编程入门', '数据结构', '计算机网络'],
-                '经济学原理': ['供需理论', '市场结构', '经济政策'],
-                '管理学': ['组织结构', '决策理论', '领导力']
-            };
-
-            // 动态加载知识点列表
-            const knowledgeList = document.getElementById('knowledge-list');
-            knowledgeList.innerHTML = '';
-            if (knowledgePoints[subject]) {
-                knowledgePoints[subject].forEach(point => {
-                    const item = document.createElement('div');
-                    item.className = 'knowledge-item';
-                    item.textContent = point;
-                    knowledgeList.appendChild(item);
-                });
-            } else {
-                knowledgeList.innerHTML = '<p>暂无知识点数据</p>';
-            }
-
-            // 设置默认显示的知识点详情
-            const currentKnowledge = document.getElementById('current-knowledge');
-            currentKnowledge.textContent = knowledgePoints[subject] ? knowledgePoints[subject][0] : '暂无知识点';
-
-            // 隐藏加载状态
-            document.getElementById('knowledge-loading').style.display = 'none';
-            document.getElementById('detail-loading').style.display = 'none';
-        });
-    </script>
 </body>
 </html> 

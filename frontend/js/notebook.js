@@ -1,163 +1,224 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // 初始化页面
-    initNotebook();
-    
-    // 绑定事件监听器
-    bindEventListeners();
-    
-    // 加载错题数据
-    loadMistakes();
+const notebookState = {
+    studentId: '',
+    records: [],
+    filteredRecords: [],
+    selectedTag: 'all',
+    status: 'all',
+    searchTerm: '',
+    page: 1,
+    pageSize: 8
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+    bindNotebookEvents();
+    await initializeNotebook();
 });
 
-// 初始化错题本
-function initNotebook() {
-    // 更新统计数据
+async function initializeNotebook() {
+    try {
+        const context = await fetchContext();
+        notebookState.studentId = context.current_student.student_id;
+        await loadWrongQuestions();
+    } catch (error) {
+        renderNotebookError(error.message || '错题本加载失败，请稍后重试。');
+    }
+}
+
+async function fetchContext() {
+    const response = await fetch('/api/ui/context');
+    const payload = await response.json();
+    if (!response.ok || !payload.current_student?.student_id) {
+        throw new Error(payload.detail || '无法获取当前学生信息');
+    }
+    return payload;
+}
+
+async function loadWrongQuestions() {
+    const response = await fetch(`/api/students/${notebookState.studentId}/wrong-questions`);
+    const payload = await response.json();
+    if (!response.ok) {
+        throw new Error(payload.detail || '无法获取错题记录');
+    }
+
+    notebookState.records = Array.isArray(payload) ? payload : [];
+    notebookState.page = 1;
+    renderNotebook();
+}
+
+function bindNotebookEvents() {
+    document.getElementById('search-btn')?.addEventListener('click', applySearch);
+    document.getElementById('search-input')?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            applySearch();
+        }
+    });
+    document.getElementById('status-filter')?.addEventListener('change', (event) => {
+        notebookState.status = event.target.value;
+        notebookState.page = 1;
+        renderNotebook();
+    });
+    document.getElementById('prev-page')?.addEventListener('click', () => {
+        if (notebookState.page > 1) {
+            notebookState.page -= 1;
+            renderMistakeList();
+            renderPagination();
+        }
+    });
+    document.getElementById('next-page')?.addEventListener('click', () => {
+        const totalPages = getTotalPages();
+        if (notebookState.page < totalPages) {
+            notebookState.page += 1;
+            renderMistakeList();
+            renderPagination();
+        }
+    });
+}
+
+function applySearch() {
+    notebookState.searchTerm = document.getElementById('search-input')?.value.trim().toLowerCase() || '';
+    notebookState.page = 1;
+    renderNotebook();
+}
+
+function renderNotebook() {
     updateStats();
-    
-    // 加载知识点标签
-    loadKnowledgeTags();
-    
-    // 初始化过滤器
-    initFilters();
+    renderKnowledgeTags();
+    applyFilters();
+    renderMistakeList();
+    renderPagination();
 }
 
-// 更新统计数据
 function updateStats() {
-    // 这里应该从后端API获取实际数据
-    const stats = {
-        total: 128,
-        mastered: 45,
-        review: 83
-    };
-    
-    document.getElementById('total-mistakes').textContent = stats.total;
-    document.getElementById('mastered-count').textContent = stats.mastered;
-    document.getElementById('review-count').textContent = stats.review;
+    const total = notebookState.records.length;
+    const mastered = notebookState.records.filter((item) => item.status === 'resolved').length;
+    const review = notebookState.records.filter((item) => item.status === 'open').length;
+
+    document.getElementById('total-mistakes').textContent = total;
+    document.getElementById('mastered-count').textContent = mastered;
+    document.getElementById('review-count').textContent = review;
 }
 
-// 加载知识点标签
-function loadKnowledgeTags() {
-    const knowledgeTags = document.getElementById('knowledge-tags');
-    // 这里应该从后端API获取实际的知识点数据
-    const tags = [
-        { id: 1, name: '牛顿运动定律', count: 15 },
-        { id: 2, name: '圆周运动', count: 8 },
-        { id: 3, name: '热学', count: 12 },
-        { id: 4, name: '电磁学', count: 20 },
-        { id: 5, name: '光学', count: 10 }
-    ];
-    
-    knowledgeTags.innerHTML = tags.map(tag => `
-        <div class="knowledge-tag" data-id="${tag.id}">
-            ${tag.name} (${tag.count})
-        </div>
-    `).join('');
-}
+function renderKnowledgeTags() {
+    const container = document.getElementById('knowledge-tags');
+    if (!container) {
+        return;
+    }
 
-// 初始化过滤器
-function initFilters() {
-    const subjectFilter = document.getElementById('subject-filter');
-    const knowledgeFilter = document.getElementById('knowledge-filter');
-    
-    // 监听学科选择变化
-    subjectFilter.addEventListener('change', function() {
-        // 更新知识点下拉列表
-        updateKnowledgeFilter(this.value);
-        // 重新加载错题列表
-        loadMistakes();
+    const tagCounts = new Map();
+    getStatusAndSearchFilteredRecords().forEach((item) => {
+        (item.knowledge_tags || []).forEach((tag) => {
+            tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+        });
     });
-    
-    // 监听知识点选择变化
-    knowledgeFilter.addEventListener('change', function() {
-        loadMistakes();
+
+    const tags = Array.from(tagCounts.entries()).sort((left, right) => right[1] - left[1]);
+    if (notebookState.selectedTag !== 'all' && !tagCounts.has(notebookState.selectedTag)) {
+        notebookState.selectedTag = 'all';
+    }
+    const allCount = getStatusAndSearchFilteredRecords().length;
+    container.innerHTML = [
+        createTagButton('all', `全部知识点 (${allCount})`, notebookState.selectedTag === 'all'),
+        ...tags.map(([tag, count]) => createTagButton(tag, `${tag} (${count})`, notebookState.selectedTag === tag))
+    ].join('');
+
+    container.querySelectorAll('.knowledge-tag').forEach((tagNode) => {
+        tagNode.addEventListener('click', () => {
+            notebookState.selectedTag = tagNode.dataset.tag;
+            notebookState.page = 1;
+            renderNotebook();
+        });
     });
 }
 
-// 更新知识点过滤器选项
-function updateKnowledgeFilter(subject) {
-    const knowledgeFilter = document.getElementById('knowledge-filter');
-    // 这里应该根据选择的学科从后端API获取相应的知识点列表
-    const knowledgePoints = {
-        'physics': [
-            { id: 1, name: '牛顿运动定律' },
-            { id: 2, name: '圆周运动' },
-            { id: 3, name: '热学' }
-        ],
-        'math': [
-            { id: 4, name: '函数' },
-            { id: 5, name: '导数' },
-            { id: 6, name: '积分' }
+function createTagButton(tag, label, active) {
+    return `<button type="button" class="knowledge-tag ${active ? 'active' : ''}" data-tag="${escapeHtml(tag)}">${escapeHtml(label)}</button>`;
+}
+
+function applyFilters() {
+    notebookState.filteredRecords = getStatusAndSearchFilteredRecords().filter((item) => {
+        if (notebookState.selectedTag === 'all') {
+            return true;
+        }
+        return (item.knowledge_tags || []).includes(notebookState.selectedTag);
+    });
+}
+
+function getStatusAndSearchFilteredRecords() {
+    return notebookState.records.filter((item) => {
+        const matchesStatus = notebookState.status === 'all' || item.status === notebookState.status;
+        const haystack = [
+            item.title,
+            item.stem,
+            item.explanation,
+            item.root_cause_summary,
+            item.qwen_summary,
+            ...(item.knowledge_tags || [])
         ]
-    };
-    
-    const options = knowledgePoints[subject] || [];
-    knowledgeFilter.innerHTML = `
-        <option value="all">全部知识点</option>
-        ${options.map(point => `
-            <option value="${point.id}">${point.name}</option>
-        `).join('')}
-    `;
+            .filter(Boolean)
+            .join(' ')
+            .toLowerCase();
+        const matchesSearch = !notebookState.searchTerm || haystack.includes(notebookState.searchTerm);
+        return matchesStatus && matchesSearch;
+    });
 }
 
-// 加载错题列表
-function loadMistakes(page = 1) {
-    const mistakeList = document.getElementById('mistake-list');
-    // 这里应该从后端API获取实际的错题数据
-    const mistakes = [
-        {
-            id: 1,
-            subject: '物理',
-            difficulty: 'medium',
-            question: '一个物体在水平面上运动，受到一个大小为5N的水平推力，物体的加速度为2m/s²，则该物体的质量是多少？',
-            answer: '2.5kg',
-            tags: ['牛顿运动定律', '力学计算'],
-            date: '2024-03-15'
-        },
-        // 更多错题数据...
-    ];
-    
-    mistakeList.innerHTML = mistakes.map(mistake => createMistakeItem(mistake)).join('');
-    updatePagination(page, 10); // 总页数假设为10
+function renderMistakeList() {
+    const container = document.getElementById('mistake-list');
+    if (!container) {
+        return;
+    }
+
+    if (!notebookState.filteredRecords.length) {
+        container.innerHTML = `
+            <div class="mistake-item">
+                <div class="mistake-content">
+                    <div class="mistake-question">当前没有符合条件的错题记录</div>
+                    <div class="mistake-answer">先去练习中心做题，答错后会自动记录到这里。</div>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    const start = (notebookState.page - 1) * notebookState.pageSize;
+    const pageItems = notebookState.filteredRecords.slice(start, start + notebookState.pageSize);
+    container.innerHTML = pageItems.map(createMistakeItem).join('');
+
+    container.querySelectorAll('[data-action-url]').forEach((button) => {
+        button.addEventListener('click', () => {
+            window.location.href = button.dataset.actionUrl;
+        });
+    });
 }
 
-// 创建错题项
-function createMistakeItem(mistake) {
+function createMistakeItem(item) {
+    const firstTag = item.knowledge_tags?.[0] || '一次函数';
+    const actionUrl = `practice.html?subject=${encodeURIComponent('数学')}&grade=${encodeURIComponent('初二')}&level=${encodeURIComponent('初中')}&knowledge=${encodeURIComponent(firstTag)}`;
+    const statusText = item.status === 'resolved' ? '已掌握' : '待复习';
+    const reviewText = item.qwen_summary || item.root_cause_summary || '建议先回看解析，再做一次对应知识点练习。';
+
     return `
-        <div class="mistake-item" data-id="${mistake.id}">
+        <div class="mistake-item" data-id="${escapeHtml(item.question_id)}">
             <div class="mistake-header">
                 <div class="mistake-meta">
-                    <span class="mistake-subject">${mistake.subject}</span>
-                    <span class="mistake-difficulty difficulty-${mistake.difficulty}">
-                        ${getDifficultyText(mistake.difficulty)}
-                    </span>
+                    <span class="mistake-subject">${statusText}</span>
+                    <span class="mistake-difficulty difficulty-${escapeHtml(item.difficulty)}">${getDifficultyText(item.difficulty)}</span>
                 </div>
-                <span class="mistake-date">${mistake.date}</span>
+                <span class="mistake-date">${formatDate(item.last_wrong_at)}</span>
             </div>
             <div class="mistake-content">
-                <div class="mistake-question">${mistake.question}</div>
-                <div class="mistake-answer">正确答案：${mistake.answer}</div>
+                <div class="mistake-question">${escapeHtml(item.title)}</div>
+                <div class="mistake-answer"><strong>题目：</strong>${escapeHtml(item.stem)}</div>
+                <div class="mistake-answer"><strong>解析：</strong>${escapeHtml(item.explanation || '暂无解析')}</div>
+                <div class="mistake-answer"><strong>复盘建议：</strong>${escapeHtml(reviewText)}</div>
             </div>
             <div class="mistake-footer">
                 <div class="mistake-tags">
-                    ${mistake.tags.map(tag => `
-                        <span class="mistake-tag">${tag}</span>
-                    `).join('')}
+                    ${(item.knowledge_tags || []).map((tag) => `<span class="mistake-tag">${escapeHtml(tag)}</span>`).join('')}
                 </div>
                 <div class="mistake-actions">
-                    <button class="action-btn review-btn" onclick="reviewMistake(${mistake.id})">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 4V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                        复习
-                    </button>
-                    <button class="action-btn delete-btn" onclick="deleteMistake(${mistake.id})">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M19 6V20C19 21.1046 18.1046 22 17 22H7C5.89543 22 5 21.1046 5 20V6" stroke="currentColor" stroke-width="2"/>
-                            <path d="M8 6V4C8 2.89543 8.89543 2 10 2H14C15.1046 2 16 2.89543 16 4V6" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                        删除
+                    <button type="button" class="action-btn review-btn" data-action-url="${actionUrl}">
+                        去练习
                     </button>
                 </div>
             </div>
@@ -165,87 +226,61 @@ function createMistakeItem(mistake) {
     `;
 }
 
-// 获取难度文本
+function renderPagination() {
+    const totalPages = getTotalPages();
+    const prev = document.getElementById('prev-page');
+    const next = document.getElementById('next-page');
+    const current = document.getElementById('current-page');
+    const total = document.getElementById('total-pages');
+    const pagination = document.querySelector('.pagination');
+
+    if (current) current.textContent = notebookState.filteredRecords.length ? notebookState.page : 0;
+    if (total) total.textContent = notebookState.filteredRecords.length ? totalPages : 0;
+    if (prev) prev.disabled = notebookState.page <= 1;
+    if (next) next.disabled = notebookState.page >= totalPages;
+    if (pagination) pagination.style.display = totalPages > 1 ? 'flex' : 'none';
+}
+
+function getTotalPages() {
+    return Math.max(1, Math.ceil(notebookState.filteredRecords.length / notebookState.pageSize));
+}
+
+function renderNotebookError(message) {
+    document.getElementById('mistake-list').innerHTML = `
+        <div class="mistake-item">
+            <div class="mistake-content">
+                <div class="mistake-question">错题本加载失败</div>
+                <div class="mistake-answer">${escapeHtml(message)}</div>
+            </div>
+        </div>
+    `;
+}
+
 function getDifficultyText(difficulty) {
-    const texts = {
-        'easy': '简单',
-        'medium': '中等',
-        'hard': '困难'
+    const labels = {
+        easy: '基础',
+        medium: '中等',
+        hard: '困难'
     };
-    return texts[difficulty] || '未知';
+    return labels[difficulty] || '未知';
 }
 
-// 更新分页
-function updatePagination(currentPage, totalPages) {
-    document.getElementById('current-page').textContent = currentPage;
-    document.getElementById('total-pages').textContent = totalPages;
-    
-    const prevBtn = document.getElementById('prev-page');
-    const nextBtn = document.getElementById('next-page');
-    
-    prevBtn.disabled = currentPage === 1;
-    nextBtn.disabled = currentPage === totalPages;
-}
-
-// 绑定事件监听器
-function bindEventListeners() {
-    // 搜索功能
-    const searchInput = document.getElementById('search-input');
-    const searchBtn = document.getElementById('search-btn');
-    
-    searchBtn.addEventListener('click', function() {
-        const searchTerm = searchInput.value.trim();
-        if (searchTerm) {
-            searchMistakes(searchTerm);
-        }
-    });
-    
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            const searchTerm = this.value.trim();
-            if (searchTerm) {
-                searchMistakes(searchTerm);
-            }
-        }
-    });
-    
-    // 分页控制
-    document.getElementById('prev-page').addEventListener('click', function() {
-        const currentPage = parseInt(document.getElementById('current-page').textContent);
-        if (currentPage > 1) {
-            loadMistakes(currentPage - 1);
-        }
-    });
-    
-    document.getElementById('next-page').addEventListener('click', function() {
-        const currentPage = parseInt(document.getElementById('current-page').textContent);
-        const totalPages = parseInt(document.getElementById('total-pages').textContent);
-        if (currentPage < totalPages) {
-            loadMistakes(currentPage + 1);
-        }
-    });
-}
-
-// 搜索错题
-function searchMistakes(term) {
-    // 这里应该调用后端API进行搜索
-    console.log('搜索错题:', term);
-    // 临时刷新错题列表
-    loadMistakes();
-}
-
-// 复习错题
-function reviewMistake(id) {
-    // 这里应该跳转到练习页面或显示详细信息
-    console.log('复习错题:', id);
-}
-
-// 删除错题
-function deleteMistake(id) {
-    if (confirm('确定要删除这道错题吗？')) {
-        // 这里应该调用后端API删除错题
-        console.log('删除错题:', id);
-        // 临时刷新错题列表
-        loadMistakes();
+function formatDate(value) {
+    if (!value) {
+        return '--';
     }
-} 
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}

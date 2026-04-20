@@ -72,6 +72,10 @@
     overflow: hidden;
 }
 
+.subject-tabs .tab-btn {
+    cursor: default;
+}
+
 .tab-btn {
     padding: 10px 25px;
     border: none;
@@ -122,13 +126,21 @@
 }
 
 /* 搜索和排序区域样式 */
+.subject-entry-note {
+    margin: -5px 0 10px;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.subject-entry-note code {
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: rgba(124, 77, 255, 0.08);
+    color: var(--primary-color);
+}
+
 .subject-filter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-    gap: 15px;
+    display: none;
 }
 
 .subject-search {
@@ -347,6 +359,23 @@
     margin: 0 auto;
 }
 
+.subject-item.is-locked {
+    cursor: not-allowed;
+    opacity: 0.68;
+    box-shadow: none;
+    background: #f6f7fb;
+}
+
+.subject-item.is-locked:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.subject-item.is-locked::after {
+    background: linear-gradient(90deg, #c7cad6, #aeb4c9);
+    transform: scaleX(1);
+}
+
 .subject-item::before {
     content: '';
     position: absolute;
@@ -457,6 +486,34 @@
     text-align: center;
     z-index: 2;
     transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.subject-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: rgba(124, 77, 255, 0.08);
+    color: var(--primary-color);
+    z-index: 2;
+}
+
+.subject-item.is-locked .subject-status {
+    background: rgba(102, 102, 102, 0.12);
+    color: #7d8497;
+}
+
+.subject-summary {
+    margin: 10px 0 0;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: var(--text-light);
+    text-align: center;
+    z-index: 2;
 }
 
 .subject-item:hover .subject-name {

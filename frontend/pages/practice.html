@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>练习中心 - AI学习伙伴</title>
+    <title>练习中心 - 初二数学个性化课后练习平台</title>
     <link rel="stylesheet" href="../css/shouye.css?v=20260322-homefix-1">
     <link rel="stylesheet" href="../css/practice.css?v=20260322-homefix-1">
     <link rel="stylesheet" href="../css/subject-icons.css?v=20260322-homefix-1">
-    <!-- 添加谷歌字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- 添加动画库 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body>
     <!-- 背景装饰元素 -->
@@ -30,8 +26,8 @@
                     <div class="circle"></div>
                 </div>
                 <div class="logo-text">
-                    <h3>AI学习伙伴</h3>
-                    <p>个性化学习助手</p>
+                    <h3>初二数学个性化课后练习平台</h3>
+                    <p>基于诊断画像的课后练习 MVP</p>
                 </div>
             </div>
 
@@ -50,7 +46,7 @@
                 </a>
                 <a href="analysis.html" class="nav-item">
                     <span class="nav-icon analysis-icon"></span>
-                    <span>学习分析</span>
+                    <span>学情分析</span>
                 </a>
                 <a href="notebook.html" class="nav-item">
                     <span class="nav-icon notebook-icon"></span>
@@ -98,9 +94,11 @@
             <div class="practice-container">
                 <!-- 顶部导航路径 -->
                 <div class="breadcrumb">
+                    <a href="../index.html">首页</a>
+                    <span class="separator">></span>
                     <a href="subject.html">学科资料</a>
                     <span class="separator">></span>
-                    <a id="knowledge-link" href="#">知识点详情</a>
+                    <a id="knowledge-link" href="subject-1.html?subject=数学&grade=初二&level=初中&knowledge=一次函数">数学知识点</a>
                     <span class="separator">></span>
                     <span>练习中心</span>
                 </div>
@@ -109,13 +107,13 @@
                 <div class="practice-header">
                     <div class="practice-title">
                         <h1 id="practice-title">练习中心</h1>
-                        <p class="practice-description" id="practice-description">巩固知识点，提升解题能力</p>
+                        <p class="practice-description" id="practice-description">根据画像生成当前训练批次</p>
                     </div>
                     <div class="practice-info">
                         <div class="practice-meta">
-                            <span class="subject-name" id="current-subject">物理</span>
-                            <span class="grade-name" id="current-grade">初中三年级</span>
-                            <span class="knowledge-name" id="current-knowledge">牛顿运动定律</span>
+                            <span class="subject-name" id="current-subject">数学</span>
+                            <span class="grade-name" id="current-grade">初中初二</span>
+                            <span class="knowledge-name" id="current-knowledge">一次函数</span>
                         </div>
                         <div class="practice-actions">
                             <button class="action-btn hint">
@@ -162,23 +160,23 @@
                                         <div class="question-difficulty medium">中等</div>
                                     </div>
                                     <div class="question-body">
-                                        <p class="question-text">一个物体在水平面上运动，受到一个大小为5N的水平推力，物体的加速度为2m/s²，则该物体的质量是多少？</p>
+                                        <p class="question-text">已知一次函数 y = 2x + 1，当 x = 3 时，y 的值是多少？</p>
                                         <div class="question-options">
                                             <div class="option">
                                                 <input type="radio" name="answer" id="option-a" value="A">
-                                                <label for="option-a">A. 1kg</label>
+                                                <label for="option-a">A. 5</label>
                                             </div>
                                             <div class="option">
                                                 <input type="radio" name="answer" id="option-b" value="B">
-                                                <label for="option-b">B. 2kg</label>
+                                                <label for="option-b">B. 6</label>
                                             </div>
                                             <div class="option">
                                                 <input type="radio" name="answer" id="option-c" value="C">
-                                                <label for="option-c">C. 2.5kg</label>
+                                                <label for="option-c">C. 7</label>
                                             </div>
                                             <div class="option">
                                                 <input type="radio" name="answer" id="option-d" value="D">
-                                                <label for="option-d">D. 10kg</label>
+                                                <label for="option-d">D. 8</label>
                                             </div>
                                         </div>
                                     </div>
@@ -199,10 +197,9 @@
                                 </div>
                                 <div class="feedback-explanation">
                                     <h4>答案解析</h4>
-                                    <p>根据牛顿第二定律：F = ma</p>
-                                    <p>将已知条件代入：5N = m × 2m/s²</p>
-                                    <p>解得：m = 5N ÷ 2m/s² = 2.5kg</p>
-                                    <p>所以物体的质量是2.5kg，答案为C。</p>
+                                    <p>把 x = 3 代入函数表达式 y = 2x + 1。</p>
+                                    <p>得到 y = 2 × 3 + 1 = 7。</p>
+                                    <p>因此这道题的正确答案是 C。</p>
                                 </div>
                                 <div class="feedback-actions">
                                     <button id="next-question" class="next-btn">下一题</button>
@@ -210,7 +207,7 @@
                             </div>
                         </div>
 
-                        <!-- 右侧AI热点题目 -->
+                        <!-- 右侧拓展练习 -->
                         <div class="practice-column right-column">
                             <div class="hotspot-container">
                                 <div class="hotspot-header">
@@ -223,7 +220,7 @@
                                             <path d="M7.5 14C5.01472 14 3 16.0147 3 18.5C3 20.9853 5.01472 23 7.5 23H17.5C19.9853 23 22 20.9853 22 18.5C22 16.0147 19.9853 14 17.5 14H7.5Z" stroke="currentColor" stroke-width="2"/>
                                             <path d="M10.9393 4.93934C11.5251 4.35355 12.4749 4.35355 13.0607 4.93934L18.0607 9.93934C18.6464 10.5251 18.6464 11.4749 18.0607 12.0607L13.0607 17.0607C12.4749 17.6464 11.5251 17.6464 10.9393 17.0607L5.93934 12.0607C5.35355 11.4749 5.35355 10.5251 5.93934 9.93934L10.9393 4.93934Z" stroke="currentColor" stroke-width="2"/>
                                         </svg>
-                                        <h3>AI热点题目推荐</h3>
+                                        <h3>拓展练习</h3>
                                     </div>
                                     <div class="hotspot-refresh">
                                         <button id="refresh-hotspot">
@@ -238,61 +235,58 @@
                                 </div>
                                 
                                 <div class="hotspot-subtitle">
-                                    <p>根据当前知识点和热点事件生成的相关题目</p>
+                                    <p>围绕当前知识点补充生成的拓展练习</p>
                                 </div>
                                 
-                                <!-- 热点题目列表 -->
+                                <!-- 拓展练习列表 -->
                                 <div class="hotspot-questions">
-                                    <!-- 热点题目1 -->
                                     <div class="hotspot-item">
                                         <div class="hotspot-item-header">
-                                            <div class="hotspot-badge">热点题</div>
+                                            <div class="hotspot-badge">拓展题</div>
                                             <div class="hotspot-difficulty">中等</div>
                                         </div>
                                         <div class="hotspot-item-content">
-                                            <p>2023年中国神舟十五号航天员乘组在空间站进行太空行走时，一个质量为0.5kg的工具不小心脱手，以2m/s²的加速度漂离，此时需要施加多大的力才能使其停下来？</p>
+                                            <p>已知一次函数 y = -x + 5，请判断点 (2, 3) 是否在这条直线上，并说明理由。</p>
                                         </div>
                                         <div class="hotspot-item-footer">
                                             <button class="solve-btn">解答此题</button>
-                                            <div class="hotspot-tag">航天应用</div>
+                                            <div class="hotspot-tag">函数判断</div>
                                         </div>
                                     </div>
                                     
-                                    <!-- 热点题目2 -->
                                     <div class="hotspot-item">
                                         <div class="hotspot-item-header">
-                                            <div class="hotspot-badge">热点题</div>
+                                            <div class="hotspot-badge">拓展题</div>
                                             <div class="hotspot-difficulty">困难</div>
                                         </div>
                                         <div class="hotspot-item-content">
-                                            <p>最新研发的电动汽车在高速路上以30m/s的速度行驶，当紧急制动时，汽车的减速度为5m/s²，若汽车质量为1500kg，制动系统需要提供多大的制动力？</p>
+                                            <p>一个平行四边形两组对边分别相等。请说明为什么它一定是平行四边形，并写出判定依据。</p>
                                         </div>
                                         <div class="hotspot-item-footer">
                                             <button class="solve-btn">解答此题</button>
-                                            <div class="hotspot-tag">新能源技术</div>
+                                            <div class="hotspot-tag">几何推理</div>
                                         </div>
                                     </div>
                                     
-                                    <!-- 热点题目3 -->
                                     <div class="hotspot-item">
                                         <div class="hotspot-item-header">
-                                            <div class="hotspot-badge">热点题</div>
+                                            <div class="hotspot-badge">拓展题</div>
                                             <div class="hotspot-difficulty">简单</div>
                                         </div>
                                         <div class="hotspot-item-content">
-                                            <p>近期举行的青少年科技大赛中，一支火箭模型的质量为200g，发射时受到8N的推力，求火箭起飞时的加速度是多少？(重力加速度g=10m/s²)</p>
+                                            <p>某班一次数学测验 5 名同学成绩分别为 78、82、85、90、95，求这组数据的平均数。</p>
                                         </div>
                                         <div class="hotspot-item-footer">
                                             <button class="solve-btn">解答此题</button>
-                                            <div class="hotspot-tag">科技竞赛</div>
+                                            <div class="hotspot-tag">数据分析</div>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <!-- 热点题目底部 -->
+                                <!-- 拓展练习底部 -->
                                 <div class="hotspot-footer">
                                     <button class="more-hotspot-btn">
-                                        <span>查看更多热点题</span>
+                                        <span>查看更多拓展练习</span>
                                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                             <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

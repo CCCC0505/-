@@ -98,6 +98,32 @@ def complete_cold_start(client):
     return finalize_response.json()
 
 
+def answer_one_recommendation_wrong(client, student_id):
+    recommendation_response = client.post("/api/practice/recommendations", json={"student_id": student_id, "requested_count": 5})
+    assert recommendation_response.status_code == 200
+    recommendation_payload = recommendation_response.json()
+    first_item = recommendation_payload["items"][0]
+    db = SessionLocal()
+    try:
+        question = db.query(QuestionBank).filter(QuestionBank.question_id == first_item["question_id"]).first()
+        wrong_answer = next(option["label"] for option in first_item["options"] if option["label"] != question.correct_answer)
+    finally:
+        db.close()
+
+    practice_response = client.post(
+        "/api/practice/answers",
+        json={
+            "student_id": student_id,
+            "batch_id": recommendation_payload["batch_id"],
+            "question_id": first_item["question_id"],
+            "answer_text": wrong_answer,
+            "duration_seconds": 95,
+        },
+    )
+    assert practice_response.status_code == 200
+    return recommendation_payload, practice_response.json()
+
+
 def test_question_bank_seed_counts():
     with make_client() as client:
         index_response = client.get("/index.html")
@@ -108,6 +134,28 @@ def test_question_bank_seed_counts():
         assert payload["diagnostic_count"] == 24
         assert payload["practice_count"] == 60
         assert payload["total_questions"] == 84
+
+
+def test_ui_subjects_and_knowledge_points_focus_on_math():
+    with make_client() as client:
+        subjects_response = client.get("/api/ui/subjects?school_type=初中")
+        assert subjects_response.status_code == 200
+        subjects_payload = subjects_response.json()
+        assert subjects_payload["school_type"] == "初中"
+        subjects = subjects_payload["subjects"]
+        assert any(item["name"] == "数学" and item["available"] is True for item in subjects)
+        assert all(item["available"] is False for item in subjects if item["name"] != "数学")
+
+        math_points_response = client.get("/api/ui/knowledge-points?subject=数学")
+        assert math_points_response.status_code == 200
+        math_points_payload = math_points_response.json()
+        assert math_points_payload["knowledge_points"]
+
+        physics_points_response = client.get("/api/ui/knowledge-points?subject=物理")
+        assert physics_points_response.status_code == 200
+        physics_points_payload = physics_points_response.json()
+        assert physics_points_payload["knowledge_points"] == []
+        assert "后续开放" in physics_points_payload["message"]
 
 
 def test_full_cold_start_flow_creates_snapshot_and_ai_run():
@@ -153,12 +201,19 @@ def test_recommendation_and_practice_update_create_new_snapshot():
         assert recommendation_payload["training_mode"] == "balanced"
         assert recommendation_payload["training_mode_label"]
         assert recommendation_payload["batch_goal"]
+        assert recommendation_payload["fusion_formula"]
+        assert recommendation_payload["overall_reason_template"]
         assert isinstance(recommendation_payload["batch_tags"], list)
         assert recommendation_payload["difficulty_distribution"]
         assert recommendation_payload["type_distribution"]
         assert recommendation_payload["knowledge_distribution"]
         assert recommendation_payload["progress"]["total_questions"] == 9
         assert recommendation_payload["progress"]["completed_questions"] == 0
+        assert recommendation_payload["items"][0]["priority"] > 0
+        assert recommendation_payload["items"][0]["recommendation_driver"]
+        assert recommendation_payload["items"][0]["recommendation_template"]
+        assert recommendation_payload["items"][0]["forgetting_risk"] >= 0
+        assert recommendation_payload["items"][0]["long_term_mastery"] >= 0
         weakness_response = client.post("/api/practice/recommendations", json={"student_id": student_id, "requested_count": 5, "training_mode": "weakness"})
         challenge_response = client.post("/api/practice/recommendations", json={"student_id": student_id, "requested_count": 5, "training_mode": "challenge"})
         assert weakness_response.status_code == 200
@@ -227,7 +282,26 @@ def test_recommendation_and_practice_update_create_new_snapshot():
         assert analysis_response.status_code == 200
         analysis_payload = analysis_response.json()
         assert analysis_payload["charts"]["progress"]["labels"]
+        assert analysis_payload["knowledge_tracking"]["top_review"]
+        assert analysis_payload["knowledge_tracking"]["knowledge_states"]
+        assert analysis_payload["knowledge_tracking"]["sequence_rows"]
+        assert analysis_payload["knowledge_tracking"]["top_review"][0]["risk_level"] in {"高遗忘风险", "中遗忘风险", "低遗忘风险"}
+        assert {
+            "student_id",
+            "question_id",
+            "knowledge_tag",
+            "created_at",
+            "is_correct",
+            "duration_seconds",
+            "difficulty",
+            "snapshot_version",
+        }.issubset(analysis_payload["knowledge_tracking"]["sequence_rows"][0].keys())
         assert analysis_payload["modeling_basis"]["references"]
+        assert analysis_payload["modeling_basis"]["upgrade_scope"]["long_term_model"] == "轻量 KT"
+        assert analysis_payload["recommendation_upgrade"]["scheme_results"]
+        assert analysis_payload["recommendation_upgrade"]["formula"]
+        assert analysis_payload["defense_assets"]["one_minute_script"]
+        assert analysis_payload["emotion_support"]["status"] in {"稳定", "轻度挫败风险", "建议鼓励"}
         assert analysis_payload["portrait_modeling"]["algorithm_pipeline"]
         portrait_modeling = client.get(f"/api/students/{student_id}/portrait-modeling")
         assert portrait_modeling.status_code == 200
@@ -254,3 +328,25 @@ def test_recommendation_and_practice_update_create_new_snapshot():
         )
         assert quick_complete.status_code == 200
         assert quick_complete.json()["snapshot"]["version_number"] == 1
+
+
+def test_wrong_questions_returns_one_record_after_wrong_answer():
+    with make_client() as client:
+        finalize_payload = complete_cold_start(client)
+        student_id = finalize_payload["student_id"]
+
+        recommendation_payload, practice_payload = answer_one_recommendation_wrong(client, student_id)
+        assert practice_payload["is_correct"] is False
+
+        wrong_questions_response = client.get(f"/api/students/{student_id}/wrong-questions")
+        assert wrong_questions_response.status_code == 200
+        wrong_questions = wrong_questions_response.json()
+        assert len(wrong_questions) == 1
+        row = wrong_questions[0]
+        assert row["question_id"] == recommendation_payload["items"][0]["question_id"]
+        assert row["status"] == "open"
+        assert row["difficulty"] in {"easy", "medium", "hard"}
+        assert isinstance(row["knowledge_tags"], list)
+        assert row["knowledge_tags"]
+        assert row["explanation"]
+        assert row["stem"]

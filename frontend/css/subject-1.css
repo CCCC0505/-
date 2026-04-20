@@ -80,7 +80,8 @@
     margin-right: 20px;
 }
 
-.physics-icon svg {
+.physics-icon svg,
+.math-icon svg {
     stroke: var(--primary-color);
 }
 
@@ -1019,4 +1020,19 @@
 .start-practice-btn:active {
     transform: translateY(1px);
     box-shadow: 0 2px 5px rgba(124, 77, 255, 0.2);
-} 
+}
+
+.start-practice-btn.is-disabled {
+    opacity: 0.55;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+.resource-link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.resource-link:hover {
+    text-decoration: underline;
+}

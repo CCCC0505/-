@@ -129,8 +129,13 @@ function bindSubjectButtons() {
     const subjectButtons = document.querySelectorAll('.subject-btn');
     subjectButtons.forEach((button) => {
         button.addEventListener('click', () => {
-            const subject = button.querySelector('span:last-child')?.textContent?.trim() || '数学';
-            window.location.href = `pages/subject.html?subject=${encodeURIComponent(subject)}`;
+            const subject = button.dataset.subject || '数学';
+            const available = button.dataset.available === 'true';
+            if (!available) {
+                showNotification('后续开放', `${subject}入口暂未开放，当前仅支持初二数学。`, 'info');
+                return;
+            }
+            window.location.href = 'pages/subject.html?grade=初二';
         });
     });
 }
@@ -173,13 +178,13 @@ function injectPortraitLaunchPanel(errorMessage = '') {
     panel.innerHTML = `
         <div class="portrait-home-main">
             <div class="portrait-home-meta">画像冷启动</div>
-            <h3>${portrait ? `当前画像：${portrait.summary_card?.headline || portrait.portrait_summary}` : '当前还没有你自己的成长画像'}</h3>
+            <h3>${portrait ? `当前画像：${portrait.summary_card?.headline || portrait.portrait_summary}` : '先建立画像，再进行个性化训练'}</h3>
             <p>${portrait
-                ? `当前学生：${homeState.workbench.student_name}，版本 V${portrait.version_number}。训练重点：${(portrait.training_focus || []).slice(0, 3).join('、') || '暂无'}`
-                : errorMessage || '先完成一次真实的冷启动建模，后续的学习分析、个人中心、个性化练习才会真正使用你的画像数据。'}</p>
+                ? `当前学生：${homeState.workbench.student_name}，版本 V${portrait.version_number}。训练重点：${(portrait.training_focus || []).slice(0, 3).join('、') || '暂无'}，可以继续进入训练或查看学情分析。`
+                : errorMessage || '完成一次问卷与诊断后，会立刻建立初二数学画像，并用于后续个性化训练与学情分析。'}</p>
             <div class="portrait-home-actions">
-                <button class="portrait-primary-btn" id="open-cold-start-btn">${portrait && !isDemo ? '重新画像冷启动' : '启动画像冷启动'}</button>
-                <button class="portrait-secondary-btn" id="goto-analysis-btn">${portrait ? '查看学习分析' : '查看示例分析'}</button>
+                <button class="portrait-primary-btn" id="open-cold-start-btn">${portrait && !isDemo ? '重新建立画像' : '开始画像冷启动'}</button>
+                <button class="portrait-secondary-btn" id="goto-analysis-btn">进入学情分析</button>
             </div>
         </div>
         <div class="portrait-home-side">
@@ -225,18 +230,22 @@ function updateHomeCards() {
     const cards = document.querySelectorAll('.card');
     if (cards[0]) {
         cards[0].querySelector('h3').textContent = '画像冷启动';
-        cards[0].querySelector('p').textContent = '先通过问卷和诊断题建立你的成长画像，后续的个性化练习、学习分析和个人中心都会基于这份画像运转。';
-        cards[0].querySelector('.card-btn').textContent = '开始建模';
+        cards[0].querySelector('p').textContent = '先通过问卷和诊断题建立初二数学画像，再进入后续训练与分析。';
+        cards[0].querySelector('.card-btn').textContent = '开始画像';
     }
     if (cards[1]) {
         cards[1].querySelector('h3').textContent = '个性化练习';
-        cards[1].querySelector('p').textContent = '根据画像自动推题，先补弱项，再做巩固，最后挑战提升题，让练习真正围绕你的当前状态。';
-        cards[1].querySelector('.card-btn').textContent = '开始练习';
+        cards[1].querySelector('p').textContent = '根据画像推荐练习任务，优先补弱，再做巩固与提升。';
+        cards[1].querySelector('.card-btn').textContent = '进入训练';
     }
-    if (cards[3] && homeState.workbench?.latest_ai_run) {
-        const aiRun = homeState.workbench.latest_ai_run;
-        cards[3].querySelector('h3').textContent = 'AI参与状态';
-        cards[3].querySelector('p').textContent = `当前模型：${aiRun.model_name}；最近一次${aiRun.success ? '成功参与画像/训练解释' : '触发回退'}。你可以在学习分析页查看结构化 AI 输出。`;
+    if (cards[2]) {
+        cards[2].querySelector('h3').textContent = '知识点学习';
+        cards[2].querySelector('p').textContent = '查看当前开放的数学知识点、例题讲解与对应练习入口。';
+        cards[2].querySelector('.card-btn').textContent = '进入学习';
+    }
+    if (cards[3]) {
+        cards[3].querySelector('h3').textContent = '学情分析';
+        cards[3].querySelector('p').textContent = '查看画像变化、薄弱点与训练反馈，持续跟踪当前学习状态。';
         cards[3].querySelector('.card-btn').textContent = '查看分析';
     }
 }
@@ -499,7 +508,7 @@ function showNotification(title, message, type = 'info') {
 function injectHomeStyles() {
     const style = document.createElement('style');
     style.textContent = `
-        body { opacity: 0; transition: opacity .4s ease; }
+        body { opacity: 1; }
         body.loaded { opacity: 1; }
         .portrait-home-panel {
             margin: 18px 0 26px;

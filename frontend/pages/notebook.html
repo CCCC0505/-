@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>错题本 - AI学习伙伴</title>
+    <title>错题本 - 初二数学个性化课后练习平台</title>
     <link rel="stylesheet" href="../css/shouye.css?v=20260322-homefix-1">
     <link rel="stylesheet" href="../css/notebook.css?v=20260322-homefix-1">
     <link rel="stylesheet" href="../css/subject-icons.css?v=20260322-homefix-1">
-    <!-- 添加谷歌字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- 添加动画库 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body>
     <!-- 背景装饰元素 -->
@@ -31,8 +27,8 @@
                     <div class="circle"></div>
                 </div>
                 <div class="logo-text">
-                    <h3>AI学习伙伴</h3>
-                    <p>个性化学习助手</p>
+                    <h3>初二数学个性化课后练习平台</h3>
+                    <p>基于诊断画像的课后练习 MVP</p>
                 </div>
             </div>
 
@@ -49,9 +45,9 @@
                     <span class="nav-icon practice-icon"></span>
                     <span>练习中心</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="analysis.html" class="nav-item">
                     <span class="nav-icon analysis-icon"></span>
-                    <span>学习分析</span>
+                    <span>学情分析</span>
                 </a>
                 <a href="notebook.html" class="nav-item active">
                     <span class="nav-icon notebook-icon"></span>
@@ -75,13 +71,13 @@
                 <!-- 错题本标题区 -->
                 <div class="notebook-header">
                     <h1>错题本</h1>
-                    <p class="notebook-description">记录、分析、改正，让每个错题成为进步的阶梯</p>
+                    <p class="notebook-description">记录练习中的错误题目与复盘建议</p>
                 </div>
 
                 <!-- 搜索和过滤区 -->
                 <div class="notebook-controls">
                     <div class="search-box">
-                        <input type="text" id="search-input" placeholder="搜索知识点、题目内容...">
+                        <input type="text" id="search-input" placeholder="搜索题目标题、知识点或复盘建议...">
                         <button id="search-btn">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2"/>
@@ -90,20 +86,10 @@
                         </button>
                     </div>
                     <div class="filter-controls">
-                        <select id="subject-filter">
-                            <option value="all">全部学科</option>
-                            <option value="math">数学</option>
-                            <option value="physics">物理</option>
-                            <option value="chemistry">化学</option>
-                        </select>
-                        <select id="knowledge-filter">
-                            <option value="all">全部知识点</option>
-                        </select>
-                        <select id="difficulty-filter">
-                            <option value="all">全部难度</option>
-                            <option value="easy">简单</option>
-                            <option value="medium">中等</option>
-                            <option value="hard">困难</option>
+                        <select id="status-filter">
+                            <option value="all">全部状态</option>
+                            <option value="open">待复习</option>
+                            <option value="resolved">已掌握</option>
                         </select>
                     </div>
                 </div>
@@ -137,12 +123,16 @@
                 <div class="notebook-content">
                     <!-- 知识点分类标签 -->
                     <div class="knowledge-tags" id="knowledge-tags">
-                        <!-- 知识点标签将通过JavaScript动态生成 -->
+                        <div class="knowledge-tag active">全部知识点</div>
                     </div>
 
                     <!-- 错题列表 -->
                     <div class="mistake-list" id="mistake-list">
-                        <!-- 错题项将通过JavaScript动态生成 -->
+                        <div class="mistake-item">
+                            <div class="mistake-content">
+                                <div class="mistake-question">正在加载错题记录...</div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- 分页控制 -->

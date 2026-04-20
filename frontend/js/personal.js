@@ -30,19 +30,17 @@ async function getCurrentStudentId() {
 }
 
 function bindPersonalActions() {
-    document.querySelector('.edit-profile')?.addEventListener('click', () => {
-        showNotification('提示', '当前版本暂不开放资料编辑，数据以学习画像为主。', 'info');
+    document.querySelector('.goto-analysis')?.addEventListener('click', () => {
+        window.location.href = 'analysis.html';
     });
-    document.querySelector('.share-profile')?.addEventListener('click', shareProfile);
-    document.querySelector('.avatar-edit-icon')?.addEventListener('click', (event) => {
-        event.stopPropagation();
-        showNotification('提示', '头像功能暂未开放，后续会与账号系统一起接入。', 'info');
+    document.querySelector('.goto-practice')?.addEventListener('click', () => {
+        window.location.href = 'practice.html';
     });
     document.querySelector('.view-report-btn')?.addEventListener('click', () => {
         window.location.href = 'analysis.html';
     });
-    document.querySelector('.unlock-pro-btn')?.addEventListener('click', () => {
-        showNotification('提示', 'PRO 区域当前作为预留能力展示。', 'info');
+    document.querySelector('.view-all-records')?.addEventListener('click', () => {
+        window.location.href = 'analysis.html';
     });
 }
 
@@ -72,7 +70,6 @@ function renderPersonalDashboard(payload) {
     renderStats(payload.stats || {});
     renderToday(payload.today || {});
     renderProgressBars(payload.progress_bars || []);
-    renderAchievements(payload.achievements || []);
     renderAdvice(payload.advice || []);
     renderLearningReport(payload.learning_report || {});
     renderWeaknessAnalysis(payload.weakness_analysis || {});
@@ -81,15 +78,15 @@ function renderPersonalDashboard(payload) {
 
 function renderProfile(payload) {
     const userName = document.querySelector('.user-name');
-    if (userName) userName.textContent = payload.student_name;
+    if (userName) userName.textContent = payload.student_name || '当前学生';
     const userDescription = document.querySelector('.user-description');
     if (userDescription) {
-        const joinedDate = new Date(payload.joined_at);
-        userDescription.textContent = `初二数学画像用户 | 加入时间：${joinedDate.getFullYear()}年${joinedDate.getMonth() + 1}月${joinedDate.getDate()}日`;
+        userDescription.textContent = '初二数学画像用户';
     }
     const tagContainer = document.querySelector('.user-tags');
     if (tagContainer) {
-        tagContainer.innerHTML = (payload.profile_tags || []).map((tag) => `<span class="tag">${tag}</span>`).join('');
+        const tags = (payload.profile_tags || []).length ? payload.profile_tags : ['当前画像标签', '练习结果概览', '初二数学样例'];
+        tagContainer.innerHTML = tags.map((tag) => `<span class="tag">${tag}</span>`).join('');
     }
 }
 
@@ -97,7 +94,7 @@ function renderStats(stats) {
     updateStatCard(0, stats.total_study_hours, '小时');
     updateStatCard(1, stats.study_days, '天');
     updateStatCard(2, stats.continuous_study, '天');
-    updateStatCard(3, stats.achievements_count, '个');
+    updateStatCard(3, personalState.payload?.practice_records?.length || 0, '条');
 }
 
 function updateStatCard(index, value, unit) {
@@ -141,23 +138,6 @@ function renderProgressBars(items) {
             if (text) text.textContent = `${item.value}%`;
         }
     });
-}
-
-function renderAchievements(items) {
-    const container = document.querySelector('.achievements-grid');
-    if (!container) return;
-    container.innerHTML = items.map((item) => `
-        <div class="achievement-card ${item.unlocked ? 'unlocked' : ''}">
-            <div class="achievement-icon ${item.unlocked ? '' : 'locked'}">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                    <path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-            <h4>${item.title}</h4>
-            <p>${item.description}</p>
-        </div>
-    `).join('');
 }
 
 function renderAdvice(items) {

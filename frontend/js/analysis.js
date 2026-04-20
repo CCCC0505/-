@@ -83,16 +83,20 @@ function renderAnalysisPage(payload) {
     renderSummaryCards(payload.summary_cards || []);
     renderCharts(payload.charts || {});
     renderWeaknesses(payload.weakness_items || []);
+    renderKnowledgeTracking(payload.knowledge_tracking || {}, payload.modeling_basis || {});
+    renderRecommendationUpgrade(payload.recommendation_upgrade || {});
+    renderDefenseAssets(payload.defense_assets || {});
+    renderEmotionSupport(payload.emotion_support || {});
     renderAIReport(payload.report || {}, payload.modeling_basis || {}, payload.portrait_modeling || {});
     renderLearningPlan(payload.learning_plan || {});
 }
 
 function updateHeader(payload) {
     const title = document.querySelector('.analysis-header h1');
-    if (title) title.textContent = `${payload.student_name}的成长画像分析`;
+    if (title) title.textContent = '学生成长画像分析';
     const description = document.querySelector('.analysis-description');
     if (description) {
-        description.textContent = '基于真实诊断、练习、知识点掌握和认知层级证据，持续更新学生成长画像。';
+        description.textContent = '基于诊断、练习与知识点证据的规则建模 + AI解释';
     }
 }
 
@@ -307,6 +311,226 @@ function renderWeaknesses(items) {
     `).join('');
 }
 
+function renderKnowledgeTracking(tracking, modelingBasis) {
+    const scopeContainer = document.getElementById('upgrade-scope');
+    const reviewContainer = document.getElementById('review-priority-list');
+    const stateContainer = document.getElementById('knowledge-state-table');
+    const sequenceContainer = document.getElementById('knowledge-sequence-table');
+    const oneLiner = document.getElementById('upgrade-one-liner');
+
+    if (oneLiner && tracking.upgrade_scope?.one_liner) {
+        oneLiner.textContent = tracking.upgrade_scope.one_liner;
+    }
+
+    if (scopeContainer) {
+        const scope = tracking.upgrade_scope || modelingBasis.upgrade_scope || {};
+        scopeContainer.innerHTML = `
+            <ul class="tracking-scope-list">
+                <li><strong>长期模型</strong>：${scope.long_term_model || '轻量 KT'}</li>
+                <li><strong>短期模型</strong>：${scope.short_term_model || '遗忘曲线'}</li>
+                <li><strong>融合层</strong>：${scope.fusion_layer || '推荐优先级与解释'}</li>
+                <li><strong>结项口径</strong>：${scope.delivery || '在原有规则画像基础上，补充知识追踪与遗忘风险机制，增强个性化推荐。'}</li>
+            </ul>
+            <h4>本轮不做</h4>
+            <ul class="tracking-nonscope-list">
+                ${(scope.non_scope || []).map((item) => `<li>${item}</li>`).join('')}
+            </ul>
+            <h4>最小数据口径</h4>
+            <ul class="tracking-formula-list">
+                ${(tracking.data_fields || []).map((item) => `<li>${item}</li>`).join('')}
+            </ul>
+            <h4>短期 / 长期公式</h4>
+            <ul class="tracking-formula-list">
+                <li>${tracking.formulas?.retention || ''}</li>
+                <li>${tracking.formulas?.forgetting_risk || ''}</li>
+                <li>${tracking.formulas?.mastery || ''}</li>
+            </ul>
+        `;
+    }
+
+    if (reviewContainer) {
+        const items = tracking.top_review || [];
+        reviewContainer.innerHTML = items.length
+            ? items.map((item, index) => `
+                <div class="review-priority-item">
+                    <div class="review-priority-head">
+                        <h4>${index + 1}. ${item.knowledge_tag}</h4>
+                        <span class="risk-badge ${riskClass(item.risk_level)}">${item.risk_level}</span>
+                    </div>
+                    <p>${item.review_reason}</p>
+                    <div class="review-priority-meta">
+                        <span>掌握度 ${item.current_mastery}</span>
+                        <span>趋势 ${item.trend_label}</span>
+                        <span>复习次数 ${item.review_count}</span>
+                        <span>距上次 ${daysSinceLabel(item.last_practiced_at)}</span>
+                    </div>
+                </div>
+            `).join('')
+            : '<p>当前暂无可计算的知识点复习优先级。</p>';
+    }
+
+    if (stateContainer) {
+        const items = tracking.knowledge_states || [];
+        stateContainer.innerHTML = items.length
+            ? `
+                <div class="tracking-table-wrap">
+                    <table class="tracking-table">
+                        <thead>
+                            <tr>
+                                <th>知识点</th>
+                                <th>当前掌握度</th>
+                                <th>最近趋势</th>
+                                <th>是否关注</th>
+                                <th>复习次数</th>
+                                <th>上次结果</th>
+                                <th>遗忘风险</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${items.map((item) => `
+                                <tr>
+                                    <td>${item.knowledge_tag}</td>
+                                    <td>${item.current_mastery}</td>
+                                    <td><span class="trend-pill ${trendClass(item.trend_label)}">${item.trend_label}</span></td>
+                                    <td><span class="attention-flag ${item.needs_attention ? 'yes' : 'no'}">${item.needs_attention ? '需要关注' : '保持稳定'}</span></td>
+                                    <td>${item.review_count}</td>
+                                    <td>${item.last_result}</td>
+                                    <td>${Math.round((item.forgetting_risk || 0) * 100)}%</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `
+            : '<p>当前暂无知识点状态数据。</p>';
+    }
+
+    if (sequenceContainer) {
+        const rows = tracking.sequence_rows || [];
+        sequenceContainer.innerHTML = rows.length
+            ? `
+                <p>当前展示最近 ${rows.length} 条序列记录，总记录数 ${tracking.sequence_total || rows.length}。</p>
+                <div class="tracking-table-wrap">
+                    <table class="tracking-table">
+                        <thead>
+                            <tr>
+                                <th>student_id</th>
+                                <th>question_id</th>
+                                <th>knowledge_tag</th>
+                                <th>created_at</th>
+                                <th>is_correct</th>
+                                <th>duration_seconds</th>
+                                <th>difficulty</th>
+                                <th>snapshot_version</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rows.map((row) => `
+                                <tr>
+                                    <td>${row.student_id}</td>
+                                    <td>${row.question_id}</td>
+                                    <td>${row.knowledge_tag}</td>
+                                    <td>${formatSequenceTime(row.created_at)}</td>
+                                    <td>${row.is_correct ? '1' : '0'}</td>
+                                    <td>${row.duration_seconds}</td>
+                                    <td>${row.difficulty}</td>
+                                    <td>${row.snapshot_version ?? 0}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `
+            : '<p>当前暂无可展示的学生-题目-知识点-时间-正误序列。</p>';
+    }
+}
+
+function renderRecommendationUpgrade(payload) {
+    const container = document.getElementById('fusion-mechanism');
+    const comparison = document.getElementById('recommendation-comparison');
+    if (container) {
+        container.innerHTML = `
+            <p><strong>融合公式：</strong>${payload.formula || 'priority = a * 长期薄弱程度 + b * 遗忘风险 + c * 最近错误波动'}</p>
+            <p><strong>整体解释模板：</strong>本轮推荐会先看长期掌握度，再看短期遗忘风险，最后再结合最近错误波动调整优先级。</p>
+            <p><strong>单题解释模板：</strong>${payload.question_reason_template || '该题关联知识点 X，当前长期掌握度偏低，且最近复习间隔较长，因此优先纳入本轮训练。'}</p>
+        `;
+    }
+
+    if (comparison) {
+        const schemes = payload.scheme_results || [];
+        const cases = payload.case_studies || [];
+        comparison.innerHTML = schemes.length
+            ? `
+                <p>${payload.summary || '当前展示同一学生在不同推荐方案下的结果变化。'}</p>
+                <div class="tracking-table-wrap">
+                    <table class="tracking-table">
+                        <thead>
+                            <tr>
+                                <th>方案</th>
+                                <th>Top 1</th>
+                                <th>Top 2</th>
+                                <th>Top 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${schemes.map((scheme) => `
+                                <tr>
+                                    <td>${scheme.label}</td>
+                                    ${(scheme.items || []).slice(0, 3).map((item) => `<td>${item.title}<br><small>${(item.knowledge_tags || []).join('、') || '未分类'}</small></td>`).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                ${(cases || []).map((item) => `
+                    <div class="comparison-case">
+                        <h4>${item.title}</h4>
+                        <p>关联知识点：${(item.knowledge_tags || []).join('、') || '未分类'}</p>
+                        <div class="comparison-ranks">
+                            <span>原始规则 第 ${item.base_rank} 位</span>
+                            <span>规则 + 遗忘 第 ${item.forgetting_rank} 位</span>
+                            <span>融合后 第 ${item.fusion_rank} 位</span>
+                        </div>
+                        <p>${item.reason}</p>
+                    </div>
+                `).join('')}
+            `
+            : '<p>当前暂无推荐升级对比数据。</p>';
+    }
+}
+
+function renderDefenseAssets(payload) {
+    const container = document.getElementById('defense-script');
+    if (!container) return;
+    container.innerHTML = `
+        <div class="defense-script-box">${payload.one_minute_script || payload.plain_summary || '长期模型看学生会不会，短期模型看学生会不会忘，两者一起决定当前先练什么。'}</div>
+        <div class="defense-flow">
+            ${(payload.flow_steps || []).map((item) => `
+                <div class="defense-flow-step">
+                    <strong>${item.title}</strong>
+                    <p>${item.detail}</p>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderEmotionSupport(payload) {
+    const container = document.getElementById('emotion-support-card');
+    if (!container) return;
+    const statusClass = payload.status === '轻度挫败风险' ? 'risk' : payload.status === '建议鼓励' ? 'warn' : 'stable';
+    container.innerHTML = `
+        <div class="emotion-status ${statusClass}">${payload.status || '稳定'}</div>
+        <p>${payload.prompt || '当前状态整体稳定，可以继续按计划推进训练。'}</p>
+        <ul class="tracking-formula-list">
+            <li>confidence_level：${payload.confidence_level ?? '--'}</li>
+            <li>连续错误次数：${payload.consecutive_errors ?? 0}</li>
+            <li>超时次数：${payload.overtime_count ?? 0}</li>
+            <li>中断天数：${payload.interruption_days ?? 0}</li>
+        </ul>
+    `;
+}
+
 function renderAIReport(report, modelingBasis, portraitModeling) {
     const container = document.querySelector('.ai-report-content');
     if (!container) return;
@@ -336,6 +560,7 @@ function renderAIReport(report, modelingBasis, portraitModeling) {
         <li><strong>${item.level_code}</strong>：${item.diagnosis}</li>
     `).join('');
     const aiStatus = portraitModeling.ai_model_status || {};
+    const aiStatusLabel = aiStatus.success ? 'AI解释' : '规则回退';
     const schemaBlock = portraitModeling.ai_output_schema?.schema
         ? `<pre style="padding:14px;border-radius:14px;background:rgba(17,24,39,.92);color:#eef2ff;overflow:auto;font-size:12px;line-height:1.6;">${escapeHtml(JSON.stringify(portraitModeling.ai_output_schema.schema, null, 2))}</pre>`
         : '';
@@ -369,25 +594,24 @@ function renderAIReport(report, modelingBasis, portraitModeling) {
         </div>
     `;
     container.innerHTML = `
-        <h3>学习情况总结</h3>
+        <h3>成长画像结论</h3>
         <p>${report.summary || '当前暂无学习总结。'}</p>
-        <h3>优势领域</h3>
-        <ul>${strengthItems || '<li>当前暂无明确优势领域。</li>'}</ul>
-        <h3>待改进领域</h3>
-        <ul>${improvementItems || '<li>当前暂无待改进领域。</li>'}</ul>
-        <h3>学习习惯分析</h3>
+        <h3>证据输入</h3>
         <p>${report.habits || '当前暂无学习习惯分析。'}</p>
-        <h3>个性化学习建议</h3>
-        <ol>${recommendationItems || '<li>先完成当前训练批次。</li>'}</ol>
-        <h3>成长画像如何建立</h3>
+        <h4>已稳定证据</h4>
+        <ul>${strengthItems || '<li>当前暂无明确稳定证据。</li>'}</ul>
+        <h4>待关注证据</h4>
+        <ul>${improvementItems || '<li>当前暂无待关注证据。</li>'}</ul>
+        <h3>规则建模</h3>
         ${flowDiagram}
-        <ul>${pipelineItems}</ul>
-        <h3>后端规则算法</h3>
-        <ul>${formulaItems}</ul>
-        <h3>AI 模型参与状态</h3>
-        <p>模型：${aiStatus.model_name || '未配置'}；是否尝试：${aiStatus.attempted ? '是' : '否'}；是否成功：${aiStatus.success ? '是' : '否'}；是否回退：${aiStatus.fallback_used ? '是' : '否'}。</p>
+        <h4>建模流程</h4>
+        <ul>${pipelineItems || '<li>当前暂无建模流程说明。</li>'}</ul>
+        <h4>规则公式</h4>
+        <ul>${formulaItems || '<li>当前暂无规则公式说明。</li>'}</ul>
+        <h3>AI解释输出</h3>
+        <p>当前状态：${aiStatusLabel}；模型：${aiStatus.model_name || '未配置'}；是否尝试：${aiStatus.attempted ? '是' : '否'}。</p>
         <p>${aiStatus.error_summary || '最近一次画像 AI 调用无错误。'}</p>
-        <h3>规范化 AI 画像输出</h3>
+        <h4>结构化输出</h4>
         <p>当前 AI 输出已被强制规范为 portrait_ai_output_v1，不再直接把原始大模型文本塞进前端。</p>
         ${schemaBlock}
         <h4>维度诊断</h4>
@@ -396,12 +620,15 @@ function renderAIReport(report, modelingBasis, portraitModeling) {
         <ul>${knowledgeItems || '<li>当前暂无额外知识点诊断。</li>'}</ul>
         <h4>认知层级诊断</h4>
         <ul>${cognitiveItems || '<li>当前暂无额外认知层级诊断。</li>'}</ul>
-        <h3>画像建模说明</h3>
+        <h3>训练建议</h3>
+        <ol>${recommendationItems || '<li>先完成当前训练批次。</li>'}</ol>
+        <h3>建模说明</h3>
         <p>${modelingBasis.overview || ''}</p>
         <ul>${noteItems}</ul>
-        <h3>参数与指标来源</h3>
+        <h3>参考依据</h3>
+        <h4>参数与指标</h4>
         <ul>${parameterItems}</ul>
-        <h3>论文依据</h3>
+        <h4>论文依据</h4>
         <ul>${referenceItems}</ul>
     `;
 }
@@ -446,15 +673,40 @@ function renderLearningPlan(plan) {
     document.getElementById('calendar-sync-btn')?.addEventListener('click', () => showNotification('日历同步功能预留中', 'info'));
 }
 
+function riskClass(level) {
+    if (level === '高遗忘风险') return 'high';
+    if (level === '中遗忘风险') return 'medium';
+    return 'low';
+}
+
+function trendClass(label) {
+    if (label === '上升') return 'rising';
+    if (label === '下降') return 'falling';
+    return 'stable';
+}
+
+function daysSinceLabel(isoText) {
+    const date = new Date(isoText);
+    if (Number.isNaN(date.getTime())) return '--';
+    const diff = Math.max(0, Math.round((Date.now() - date.getTime()) / 86400000));
+    return `${diff}天`;
+}
+
+function formatSequenceTime(isoText) {
+    const date = new Date(isoText);
+    if (Number.isNaN(date.getTime())) return isoText;
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+}
+
 function downloadAnalysisReport() {
     if (!analysisState.payload) return;
     const { report, modeling_basis: modelingBasis } = analysisState.payload;
     const lines = [
-        '学习分析报告',
+        '学生成长画像分析摘要',
         '',
-        `总结：${report.summary || ''}`,
+        `画像结论：${report.summary || ''}`,
         '',
-        '学习建议：',
+        '训练建议：',
         ...(report.recommendations || []).map((item, index) => `${index + 1}. ${item}`),
         '',
         '建模说明：',
@@ -467,16 +719,16 @@ function downloadAnalysisReport() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `analysis-${analysisState.payload.student_name}.txt`;
+    link.download = `portrait-analysis-${analysisState.payload.student_name}.txt`;
     link.click();
     URL.revokeObjectURL(url);
 }
 
 async function shareAnalysisReport() {
     if (!analysisState.payload) return;
-    const text = `${analysisState.payload.student_name} 当前画像总结：${analysisState.payload.report.summary}`;
+    const text = `${analysisState.payload.student_name} 的成长画像分析摘要：${analysisState.payload.report.summary}`;
     if (navigator.share) {
-        await navigator.share({ title: '学习分析报告', text });
+        await navigator.share({ title: '学生成长画像分析', text });
     } else {
         await navigator.clipboard.writeText(text);
         showNotification('分析摘要已复制到剪贴板', 'success');
